@@ -54,20 +54,22 @@ Her agent .md şu bölümlere sahip olmalı:
 [ ] 7. sync-push.sh ile projelere dağıt (gerekirse)
 ```
 
-## Hafıza Hiyerarşisi
+## Hafıza Konumu
+
+Tüm hafıza dosyaları `smurfs/memory/` altındadır (git-tracked, tek kaynak):
 
 ```
-Global Memory (~/.claude/projects/.../memory/)
+smurfs/memory/
+  ├── MEMORY.md                — İndeks
   ├── user_profile.md          — Kullanıcı kim, nasıl çalışır
+  ├── workspace_overview.md    — Proje haritası
   ├── feedback_*.md            — Yaklaşım kuralları (ne yapma, ne yap)
   ├── project_*.md             — Aktif proje/araç durumu
-  └── MEMORY.md                — İndeks (her dosyaya 1 satır pointer)
-
-Local Memory (smurfs/memory/)
   ├── patterns/{stack}.md      — Teknik pattern birikimi
   ├── clients/{client}.md      — Müşteri tercihleri
   └── decisions/               — Mimari kararlar (ADR)
 ```
 
-Kural: Global memory Papa Smurf'un "beyin" hafızası, local memory "proje hafızası"dır.
-Global memory oturum başında otomatik yüklenir; local memory dispatch öncesi manuel okunur.
+`~/.claude/projects/.../memory/MEMORY.md` → sadece yönlendirme (redirect), asıl dosyalar burada değil.
+
+Kural: Oturum başında `smurfs/memory/MEMORY.md` okunur. Yeni hafıza yazılırken dosya `smurfs/memory/` altına oluşturulur.

@@ -5,12 +5,29 @@
 ```
 Phase 1: Discovery
   → Poet Smurf (requirements.md + tech-spec.md)
-  → Dreamy Smurf (research open questions)
+  → Dreamy Smurf: Tech Research (open questions from spec)
   ⛳ CHECKPOINT 1: User approves spec + stack — WAIT before proceeding
 
-Phase 2: Design
-  → Vanity Smurf (design-a.html, design-b.html, design-c.html)
-  ⛳ CHECKPOINT 2: User selects design A/B/C — WAIT before proceeding
+Phase 2: Design (3-step — never skip steps)
+
+  Step 2a: Design Research
+    → Dreamy Smurf: UI/UX Design Research mode
+      • Searches Dribbble, Behance, Awwwards, Lapa.ninja, live competitors
+      • Produces Design Brief: trends, inspiration refs, layout direction options
+      • Documents what to avoid (anti-patterns, AI-generic clichés)
+    ⛳ CHECKPOINT 2a: User reviews Design Brief + confirms visual direction — WAIT
+
+  Step 2b: Wireframes
+    → Vanity Smurf: Wireframes only (gray boxes, layout structure, no color)
+      • wireframe-a.html — Direction A from brief
+      • wireframe-b.html — Direction B from brief
+    ⛳ CHECKPOINT 2b: User selects wireframe structure — WAIT
+
+  Step 2c: Full Design Alternatives
+    → Vanity Smurf: Full HTML mockups based on approved wireframe + Design Brief
+      • design-a.html — Visual direction A
+      • design-b.html — Visual direction B
+    ⛳ CHECKPOINT 2c: User selects final design A/B — WAIT before proceeding
 
 Phase 3: Development
   → Hefty Smurf (scaffold)
@@ -30,8 +47,9 @@ Phase 3: Development
 ## Other Mandatory Chains
 
 1. **ANY UI/CSS work** → Painter Smurf → Brainy Smurf (review MANDATORY, never skip)
-2. **New design needed** → Vanity Smurf → CHECKPOINT → Painter Smurf → Brainy Smurf
-3. **Unknown approach** → Dreamy Smurf → (implementation smurf)
+2. **New design needed** → Dreamy (design research) → CHECKPOINT 2a → Vanity (wireframes) → CHECKPOINT 2b → Vanity (full designs) → CHECKPOINT 2c → Painter → Brainy
+3. **Unknown approach** → Dreamy Smurf Tech Research → (implementation smurf)
+4. **E2E test / UAT / pre-release** → Brainy Smurf dispatched with `model: opus` (Super Mode)
 4. **Mobile work** → Dreamy Smurf (stack decision first) → Clumsy Smurf → Brainy Smurf
 5. **Backend + Frontend together** → Handy + Painter (parallel) → Brainy (review both)
 6. **Image/visual asset needed** → Smurfette (can run parallel with Painter or Handy)

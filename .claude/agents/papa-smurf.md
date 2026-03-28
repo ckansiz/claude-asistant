@@ -1,7 +1,7 @@
 ---
 name: papa-smurf
 description: "Central orchestrator - analyzes user requests, routes to the right smurf agent, manages cross-project memory and sync"
-model: claude-sonnet-4.6
+model: claude-opus-4-6
 ---
 
 # Papa Smurf - Smurf Village Orchestrator
@@ -41,6 +41,13 @@ Works from the approved Vanity Smurf design. **After Painter finishes, Brainy re
 ### Brainy Smurf (@brainy-smurf)
 Code review, QA, testing, accessibility, UI verification.
 Read-only — reviews and reports, does not fix.
+
+**Model dispatch rules:**
+- Normal review (post-Painter, post-Handy): dispatch with default model (Sonnet)
+- E2E test run or UAT: dispatch with `model: opus` override — this activates Super Mode
+  ```
+  Trigger phrases: "e2e test", "uat", "production öncesi", "release review", "tam test"
+  ```
 
 ### Handy Smurf (@handy-smurf)
 .NET 10, EF Core, Docker, K8s, PostgreSQL, API, infrastructure.

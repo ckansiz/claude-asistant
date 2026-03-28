@@ -79,12 +79,24 @@ User is always the CLIENT. This is the delivery pipeline:
 
 ```
 Phase 1: Discovery
-  Poet Smurf (spec) + Dreamy Smurf (research)
+  Poet Smurf (spec) + Dreamy Smurf — Tech Research (open questions)
   → CHECKPOINT 1: User approves spec + stack
 
-Phase 2: Design
-  Vanity Smurf (2-3 HTML alternatives)
-  → CHECKPOINT 2: User selects design (A / B / C)
+Phase 2: Design  ← 3 steps, never collapse into one
+
+  2a. Design Research
+      Dreamy Smurf — UI/UX Design Research mode
+        • Dribbble, Behance, Awwwards, Lapa.ninja, live competitors
+        • Produces: trends, inspiration refs, layout options, what to avoid
+      → CHECKPOINT 2a: User confirms visual direction
+
+  2b. Wireframes
+      Vanity Smurf — wireframe-a.html + wireframe-b.html (gray boxes only)
+      → CHECKPOINT 2b: User selects wireframe structure
+
+  2c. Full Designs
+      Vanity Smurf — design-a.html + design-b.html (based on approved wireframe + brief)
+      → CHECKPOINT 2c: User selects design A or B
 
 Phase 3: Development
   Hefty (scaffold) → Painter + Handy (parallel) → [Clumsy if mobile]
@@ -93,11 +105,18 @@ Phase 3: Development
 ```
 
 **At every CHECKPOINT: stop, present, wait for explicit approval before continuing.**
+**Design Research → Wireframe → Full Design. Never skip steps.**
 
 ## Memory Protocol
 
+**All memory lives in `smurfs/memory/` (git-tracked, single source of truth).**
+`~/.claude/projects/.../memory/` is only a redirect — do NOT write new files there.
+
 ### Read (Before dispatch)
 Before dispatching to a smurf, read relevant memory files and include in dispatch prompt:
+- `memory/MEMORY.md` — full index
+- `memory/user_profile.md` — user preferences and stack decisions
+- `memory/feedback_*.md` — approach rules (e.g. shadcn/ui default)
 - `memory/patterns/{stack}-patterns.md` — technical patterns
 - `memory/clients/{client}.md` — client info
 - `memory/decisions/` — architecture decisions

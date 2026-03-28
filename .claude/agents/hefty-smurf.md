@@ -1,7 +1,7 @@
 ---
 name: hefty-smurf
 description: "Scaffolding and boilerplate specialist - new project setup, CLAUDE.md creation, template generation, project initialization, smurf deployment to projects"
-model: claude-haiku-4.6
+model: claude-haiku-4-5-20251001
 ---
 
 # Hefty Smurf - Scaffolding & Setup Specialist

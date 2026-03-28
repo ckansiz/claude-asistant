@@ -22,27 +22,31 @@ smurfs/ (Central Brain)                Project (.claude/)
 
 | Smurf | File | Model | Role | Write Access |
 |-------|------|-------|------|-------------|
-| Papa Smurf | `papa-smurf.md` | claude-sonnet-4.6 | Orchestrator, SDLC gatekeeper, checkpoint management | — |
-| Poet Smurf | `poet-smurf.md` | claude-sonnet-4.6 | Requirements, PRD, user stories, tech spec | Yes |
-| Vanity Smurf | `vanity-smurf.md` | claude-sonnet-4.6 | 2-3 standalone HTML design alternatives | Yes |
-| Painter Smurf | `painter-smurf.md` | claude-sonnet-4.6 | UI/CSS/Design, Tailwind, shadcn/ui | Yes |
-| Brainy Smurf | `brainy-smurf.md` | claude-sonnet-4.6 | Code review, QA, accessibility | **No (read-only)** |
-| Handy Smurf | `handy-smurf.md` | claude-sonnet-4.6 | .NET 10, EF Core, Docker, K8s, DB | Yes |
-| Hefty Smurf | `hefty-smurf.md` | claude-haiku-4.6 | Scaffolding, project setup, sync-push | Yes |
-| Dreamy Smurf | `dreamy-smurf.md` | claude-sonnet-4.6 | Tech research, best practices, stack decisions | **No (read-only)** |
-| Clumsy Smurf | `clumsy-smurf.md` | claude-sonnet-4.6 | Mobile apps (React Native/Expo/Flutter - stack TBD) | Yes |
-| Smurfette | `smurfette.md` | claude-sonnet-4.6 | AI image generation — special day visuals, social media, branding (Wesoco) | Yes |
+| Papa Smurf | `papa-smurf.md` | **claude-opus-4-6** | Orchestrator, SDLC gatekeeper, checkpoint management | — |
+| Poet Smurf | `poet-smurf.md` | claude-sonnet-4-6 | Requirements, PRD, user stories, tech spec | Yes |
+| Vanity Smurf | `vanity-smurf.md` | claude-sonnet-4-6 | Wireframes first → 2-3 HTML design alternatives (works from Dreamy's design brief) | Yes |
+| Painter Smurf | `painter-smurf.md` | claude-sonnet-4-6 | UI/CSS/Design, Tailwind, shadcn/ui | Yes |
+| Brainy Smurf | `brainy-smurf.md` | Sonnet (default) / **Opus (E2E+UAT)** | Code review, QA, accessibility — Super Mode for pre-release | **No (read-only)** |
+| Handy Smurf | `handy-smurf.md` | claude-sonnet-4-6 | .NET 10, EF Core, Docker, K8s, DB | Yes |
+| Hefty Smurf | `hefty-smurf.md` | claude-haiku-4-5-20251001 | Scaffolding, project setup, sync-push | Yes |
+| Dreamy Smurf | `dreamy-smurf.md` | **claude-opus-4-6** | Tech research + UI/UX design research (Dribbble, Behance, trends, design brief) | **No (read-only)** |
+| Clumsy Smurf | `clumsy-smurf.md` | claude-sonnet-4-6 | Mobile apps (React Native/Expo/Flutter - stack TBD) | Yes |
+| Smurfette | `smurfette.md` | claude-sonnet-4-6 | AI image generation — special day visuals, social media, branding (Wesoco) | Yes |
 
 ## SDLC Pipeline
 
 ```
 Phase 1: Discovery
-  Poet Smurf (spec) + Dreamy Smurf (research)
+  Poet Smurf (spec) + Dreamy Smurf — Tech Research
   CHECKPOINT 1: User approves spec + stack
 
-Phase 2: Design
-  Vanity Smurf (2-3 HTML alternatives)
-  CHECKPOINT 2: User selects design (A / B / C)
+Phase 2: Design  ← 3 steps
+  2a. Dreamy Smurf — UI/UX Design Research (Dribbble, Behance, trends, brief)
+      CHECKPOINT 2a: User confirms visual direction
+  2b. Vanity Smurf — Wireframes (gray-box layout structure only)
+      CHECKPOINT 2b: User selects wireframe structure
+  2c. Vanity Smurf — Full HTML designs (2 alternatives, from brief + approved wireframe)
+      CHECKPOINT 2c: User selects design A or B
 
 Phase 3: Development
   Hefty (scaffold) -> Painter + Handy (parallel) -> [Clumsy if mobile]
@@ -51,6 +55,7 @@ Phase 3: Development
 ```
 
 At every CHECKPOINT: stop, present clearly, wait for explicit approval before continuing.
+Design Research → Wireframe → Full Design. Never collapse these steps.
 
 ## Tools
 
