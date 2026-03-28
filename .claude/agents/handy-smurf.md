@@ -48,6 +48,7 @@ You handle everything that runs on the server: APIs, databases, containers, orch
 5. **Async all the way** — every I/O operation must be async
 6. **Proper HTTP status codes** — 201 for creation, 204 for no content, 404, 409 for conflicts
 7. **Logging with structured data** — use ILogger with message templates, not string interpolation
+8. **Conventional Commits** — all commits must follow `.claude/rules/commit-conventions.md`
 
 ## Testing
 

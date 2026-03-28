@@ -1,11 +1,11 @@
-# Şirin Köyü - Federated Agent Architecture
+# Smurf Village - Federated Agent Architecture
 
-Merkezi bir ajan orkestrasyon sistemi. `smurfs/` dizini "beyin" görevi görür, her proje kendi şirin kopyalarıyla bağımsız çalışır.
+A centralized agent orchestration system. The `smurfs/` directory serves as the "brain", each project works independently with its own smurf copies.
 
-## Mimari
+## Architecture
 
 ```
-smurfs/ (Merkez Beyin)              Proje (.claude/)
+smurfs/ (Central Brain)                Project (.claude/)
 ┌──────────────────┐               ┌──────────────────────┐
 │ Master Agents    │ ── push ──→   │ Local Agent Copies    │
 │ Memory/Patterns  │ ── push ──→   │ Shared Patterns       │
@@ -14,158 +14,159 @@ smurfs/ (Merkez Beyin)              Proje (.claude/)
 └──────────────────┘               └──────────────────────┘
 ```
 
-- **Push:** Master şirin tanımları + merkezi pattern'lar projeye kopyalanır
-- **Pull:** Projede biriken öğrenimler merkeze aktarılır
-- **Proje bağımsızlığı:** Projenin `rules/`, `CLAUDE.md` dosyalarına sync DOKUNMAZ
+- **Push:** Master smurf definitions + central patterns are copied to the project
+- **Pull:** Learnings accumulated in the project are synced back to central
+- **Project independence:** Sync NEVER touches the project's `rules/`, `CLAUDE.md` files
 
-## Şirinler
+## Smurfs
 
-| Şirin | Dosya | Model | Rol | Yazma İzni |
-|-------|-------|-------|-----|------------|
-| Ressam Şirin | `ressam-sirin.md` | opus | UI/CSS/Design, Tailwind, shadcn/ui | Var |
-| Gözlüklü Şirin | `gozluklu-sirin.md` | opus | Code review, QA, accessibility | **Yok (read-only)** |
-| Hırdavat Şirin | `hirdavat-sirin.md` | opus | .NET 10, EF Core, Docker, K8s, DB | Var |
-| Çırak Şirin | `cirak-sirin.md` | sonnet | Scaffolding, proje kurulumu, sync-push | Var |
-| Araştırmacı Şirin | `arastirmaci-sirin.md` | opus | Teknoloji araştırma, best practice | **Yok (read-only)** |
+| Smurf | File | Model | Role | Write Access |
+|-------|------|-------|------|-------------|
+| Papa Smurf | `papa-smurf.md` | claude-sonnet-4.6 | Orchestrator, SDLC gatekeeper, checkpoint management | — |
+| Poet Smurf | `poet-smurf.md` | claude-sonnet-4.6 | Requirements, PRD, user stories, tech spec | Yes |
+| Vanity Smurf | `vanity-smurf.md` | claude-sonnet-4.6 | 2-3 standalone HTML design alternatives | Yes |
+| Painter Smurf | `painter-smurf.md` | claude-sonnet-4.6 | UI/CSS/Design, Tailwind, shadcn/ui | Yes |
+| Brainy Smurf | `brainy-smurf.md` | claude-sonnet-4.6 | Code review, QA, accessibility | **No (read-only)** |
+| Handy Smurf | `handy-smurf.md` | claude-sonnet-4.6 | .NET 10, EF Core, Docker, K8s, DB | Yes |
+| Hefty Smurf | `hefty-smurf.md` | claude-haiku-4.6 | Scaffolding, project setup, sync-push | Yes |
+| Dreamy Smurf | `dreamy-smurf.md` | claude-sonnet-4.6 | Tech research, best practices, stack decisions | **No (read-only)** |
+| Clumsy Smurf | `clumsy-smurf.md` | claude-sonnet-4.6 | Mobile apps (React Native/Expo/Flutter - stack TBD) | Yes |
 
-## Zorunlu Zincirler
+## SDLC Pipeline
 
 ```
-UI/CSS işi        → Ressam Şirin → Gözlüklü Şirin (review zorunlu)
-Yeni proje        → Çırak Şirin  → (ilgili şirin)
-Bilinmeyen konu   → Araştırmacı  → (uygulayıcı şirin)
-Backend+Frontend  → Hırdavat + Ressam (paralel) → Gözlüklü (review)
+Phase 1: Discovery
+  Poet Smurf (spec) + Dreamy Smurf (research)
+  CHECKPOINT 1: User approves spec + stack
+
+Phase 2: Design
+  Vanity Smurf (2-3 HTML alternatives)
+  CHECKPOINT 2: User selects design (A / B / C)
+
+Phase 3: Development
+  Hefty (scaffold) -> Painter + Handy (parallel) -> [Clumsy if mobile]
+  -> Brainy (review)
+  CHECKPOINT 3: Delivery report -> User business review -> Release
 ```
 
-## Dizin Yapısı
+At every CHECKPOINT: stop, present clearly, wait for explicit approval before continuing.
+
+## Directory Structure
 
 ```
 smurfs/
-├── CLAUDE.md                        # Şirin Baba orkestratör talimatları
+├── CLAUDE.md                        # Papa Smurf orchestrator instructions
 ├── .claude/
-│   ├── agents/                      # 5 master şirin tanımı
+│   ├── agents/                      # 9 master smurf definitions
 │   ├── rules/
-│   │   ├── workspace-map.md         # Proje → dizin → stack eşlemesi
-│   │   └── delegation-rules.md      # Delegasyon kuralları
+│   │   ├── workspace-map.md         # Project -> directory -> stack mapping
+│   │   └── delegation-rules.md      # Delegation rules + SDLC pipeline
 │   └── settings.local.json
 ├── memory/
-│   ├── patterns/                    # Stack bazlı öğrenimler
+│   ├── patterns/                    # Stack-based learnings
 │   │   ├── nextjs-patterns.md
 │   │   ├── astro-patterns.md
 │   │   ├── dotnet-patterns.md
 │   │   └── tailwind-patterns.md
-│   ├── clients/                     # Müşteri notları
-│   └── decisions/                   # Mimari kararlar (ADR)
-├── templates/claude-md/             # Proje CLAUDE.md şablonları
+│   ├── clients/                     # Client notes
+│   └── decisions/                   # Architecture decisions (ADR)
+├── templates/claude-md/             # Project CLAUDE.md templates
 │   ├── nextjs-site.md
 │   ├── astro-site.md
 │   └── dotnet-backend.md
 └── scripts/
-    ├── sync-push.sh                 # Master → Proje
-    └── sync-pull.sh                 # Proje → Master
+    ├── sync-push.sh                 # Master -> Project
+    └── sync-pull.sh                 # Project -> Master
 ```
 
-## Kullanım
+## Usage
 
-### 1. Projeye şirinleri dağıt
+### 1. Deploy smurfs to a project
 
 ```bash
 ./scripts/sync-push.sh ~/workspace/wesoco/works/oltan
 ```
 
-Bu komut:
-- Master agent dosyalarını `{proje}/.claude/agents/` altına kopyalar
-- Merkezi pattern'ları `{proje}/.claude/rules/shared-patterns.md`'ye yazar
-- `{proje}/.claude/project-learnings.md` oluşturur (yoksa)
-- Projenin mevcut `rules/` ve `CLAUDE.md` dosyalarına **dokunmaz**
+This command:
+- Copies master agent files to `{project}/.claude/agents/`
+- Writes central patterns to `{project}/.claude/rules/shared-patterns.md`
+- Creates `{project}/.claude/project-learnings.md` (if missing)
+- Does NOT touch the project's existing `rules/` or `CLAUDE.md` files
 
-### 2. Proje dizininde çalış
+### 2. Work in the project directory
 
 ```bash
 cd ~/workspace/wesoco/works/oltan
-claude  # Claude Code'u aç
+claude  # Open Claude Code
 ```
 
-Proje içinde şirinler doğrudan kullanılabilir:
-- `@ressam-sirin` — UI/CSS işi ver
-- `@gozluklu-sirin` ��� Review yaptır
-- `@hirdavat-sirin` — Backend işi ver
-- `@cirak-sirin` — Kurulum/scaffold
-- `@arastirmaci-sirin` — Araştırma
+Smurfs can be used directly within the project:
+- `@poet-smurf`    -- Requirements + tech spec
+- `@vanity-smurf`  -- Design alternatives (HTML)
+- `@painter-smurf` -- UI/CSS implementation
+- `@brainy-smurf`  -- Code review
+- `@handy-smurf`   -- Backend work
+- `@hefty-smurf`   -- Setup/scaffold
+- `@dreamy-smurf`  -- Research
+- `@clumsy-smurf`  -- Mobile (after stack decision)
 
-### 3. Öğrenimleri merkeze çek
+### 3. Pull learnings back to central
 
 ```bash
-# Tek proje:
+# Single project:
 ./scripts/sync-pull.sh ~/workspace/wesoco/works/oltan
 
-# Tüm projeler:
+# All projects:
 ./scripts/sync-pull.sh --all
 ```
 
-Bu komut:
-- Projelerdeki `project-learnings.md` dosyalarını okur
-- İçeriği `memory/patterns/cross-project-learnings.md`'ye aktarır
-- Senkronlanan girdileri `[SYNCED]` olarak işaretler
-
-### 4. Güncellenmiş beyni projelere geri dağıt
+### 4. Re-deploy updated brain to projects
 
 ```bash
 ./scripts/sync-push.sh ~/workspace/wesoco/works/oltan
 ```
 
-## Şirin Baba ile Orkestrasyon
+## Workspace Map
 
-`smurfs/` dizininde `@sirin-baba` olarak çalıştığında Şirin Baba:
-
-1. Kullanıcının isteğini analiz eder
-2. Hedef proje dizinini belirler (`workspace-map.md`'den)
-3. İlgili memory dosyalarını okur
-4. Doğru şirine dispatch eder
-5. Sonucu doğrular (gerekirse Gözlüklü'yü çağırır)
-6. Merkezi memory'yi günceller
-
-## Workspace Haritası
-
-| Proje | Dizin | Stack |
-|-------|-------|-------|
+| Project | Directory | Stack |
+|---------|-----------|-------|
 | qoommerce (backend) | `~/workspace/qoommerce/qoommerce-app/backend/` | .NET 10, EF Core, PostgreSQL |
 | qoommerce (frontend) | `~/workspace/qoommerce/qoommerce-app/frontend/` | Astro 4, React 18, shadcn/ui |
 | loodos | `~/workspace/loodos/a101-mep-backend/` | .NET, EF Core, MongoDB |
 | docker infra | `~/workspace/docker/` | Docker Compose, PostgreSQL 18, Grafana LGTM |
 | k8s | `~/workspace/k8s/` | Kubernetes YAML |
-| wesoco clients | `~/workspace/wesoco/works/{slug}/` | Next.js / Astro (değişken) |
+| wesoco clients | `~/workspace/wesoco/works/{slug}/` | Next.js / Astro (varies) |
 
-### Wesoco Müşterileri
+### Wesoco Clients
 
 arzisi-project, asfire, canan-ince-borekci, efor-klima, kanser-tedavi, kkm-hendislik, kofteci-ekrem, ms-ako, oltan, ppf-web, profarkgarage.com.tr, qretna-app, ram-makina, serkan-tayar, trabzonppfcom, wcard-website, wcards, wesoco-uc, wesoco-website
 
-## Memory Sistemi
+## Memory System
 
-### Yazma kuralı
-Şirinler çalışırken önemli keşiflerini projenin `.claude/project-learnings.md` dosyasına yazar:
+### Write rule
+Smurfs write important discoveries to the project's `.claude/project-learnings.md`:
 
 ```markdown
 ## 2026-03-28 - Tailwind Dark Mode
-**Sirin:** ressam-sirin
-**Pattern:** Bu projede dark mode class strategy kullanılıyor, media değil
-**Applicable to:** Tüm wesoco Next.js projeleri
+**Smurf:** painter-smurf
+**Pattern:** This project uses dark mode class strategy, not media
+**Applicable to:** All wesoco Next.js projects
 ```
 
-### Sync döngüsü
+### Sync cycle
 ```
-Proje'de çalış → project-learnings.md güncellenir
-        ↓
-sync-pull.sh → merkez memory güncellenir
-        ↓
-sync-push.sh → güncel bilgi tüm projelere dağıtılır
+Work in project -> project-learnings.md updated
+        |
+sync-pull.sh -> central memory updated
+        |
+sync-push.sh -> updated knowledge distributed to all projects
 ```
 
-## Yeni Şirin Ekleme
+## Adding a New Smurf
 
-1. `smurfs/.claude/agents/` altına yeni `.md` dosyası oluştur
-2. YAML frontmatter'da `name`, `description`, `model` belirt
-3. `disallowedTools` ile izinleri kısıtla (review ajanlarında Write/Edit kapat)
-4. `CLAUDE.md`'deki delegasyon kurallarına ekle
-5. `delegation-rules.md`'ye zincir kuralını ekle
-6. `sync-push.sh` ile projelere dağıt
+1. Create a new `.md` file under `smurfs/.claude/agents/`
+2. Define `name`, `description`, `model` in YAML frontmatter
+3. Use `disallowedTools` to restrict permissions (disable Write/Edit for review agents)
+4. Add to delegation rules in `CLAUDE.md`
+5. Add chain rule to `delegation-rules.md`
+6. Deploy to projects with `sync-push.sh`

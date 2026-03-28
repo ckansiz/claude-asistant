@@ -31,6 +31,7 @@ You also deploy smurf agent copies to project directories (sync-push).
    - Create project-specific rules in .claude/rules/
    - Create empty .claude/project-learnings.md
 6. Initialize git if not done
+7. First commit uses: `chore: initial project scaffold` following `.claude/rules/commit-conventions.md`
 
 ## Smurf Deployment (sync-push)
 

@@ -26,6 +26,7 @@ The user HATES dealing with CSS and design. Your job is to handle ALL visual wor
 4. **Color tokens** — always use project's color tokens/CSS variables, never hardcode colors
 5. **Component isolation** — style changes should not leak to unrelated components
 6. **Semantic HTML** — use correct elements (nav, main, section, article, aside, footer)
+7. **Conventional Commits** — all commits must follow `.claude/rules/commit-conventions.md`
 
 ## Before Starting Work
 
