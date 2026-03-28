@@ -1,0 +1,761 @@
+<!--
+  DESIGN A — "Güven ve Basitlik"
+
+  Design Research references used:
+  - DoorLoop (doorloop.com): text-first hero, trust bar with logos, star ratings yapısı
+  - ikas (ikas.com): Türk pazarına güven sinyalleri (müşteri sayısı, iyzico, kurucu), dual CTA
+  - Linear (linear.app): minimal typography, letter-spacing, whitespace kullanımı
+  - shadcn/ui dashboard example: stat card layout, table pattern
+
+  Layout decisions:
+  - Hero: Split — büyük sol text + sağ dashboard screenshot (perspective tilt). Ürün görseli erken = %20 yüksek conversion.
+  - Feature section: Tab-based, kullanıcı tipine göre — yönetici/sakin/kapıcı persona ayrımı
+  - Differentiator section: Navy bg break — hiperlokal reklam "sadece Blocero'da" mesajı
+  - CTA zone: Fiyatlandırma → final navy banner. Kırmızı yalnızca final CTA'da — scarcity of accent
+
+  What makes this non-generic:
+  - Türk pazarına özel trust sinyalleri (iyzico, KVKK, PCI-DSS) — rakip Buildium/DoorLoop'ta bunlar yok
+  - Dashboard mockup perspective tilt — ürünü erken, güvenilir şekilde gösterir
+  - Hiperlokal reklam section navy bg ile kırılma — rakiplerin HIÇBIRINDE olmayan gelir modeli öne çıkıyor
+  - Kapıcı yönetimi badge'i "Sektörde İlk" — sosyal kanıt değil, rakip yokluğu kanıtı
+-->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blocero — Apartman Yönetiminin Yeni Standartı</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'DM Sans', sans-serif; }
+
+    :root {
+      --navy: #1B2B5E;
+      --navy-light: #2A3F7E;
+      --red: #E32B2B;
+      --bg: #F8F9FC;
+      --card: #FFFFFF;
+      --border: #E2E8F0;
+      --muted: #64748B;
+      --foreground: #0F172A;
+      --radius: 10px;
+    }
+
+    /* Label */
+    .design-label {
+      position: fixed; top: 12px; right: 12px;
+      background: #0F172A; color: white;
+      font-size: 11px; padding: 4px 10px;
+      border-radius: 6px; z-index: 9999;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* Nav */
+    .nav-sticky {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: var(--navy); color: white;
+      padding: 10px 22px; border-radius: 8px;
+      font-weight: 600; font-size: 15px;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { background: var(--navy-light); }
+
+    .btn-outline {
+      background: transparent; color: var(--navy);
+      border: 1.5px solid var(--border); padding: 10px 20px;
+      border-radius: 8px; font-weight: 500; font-size: 15px;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: border-color 0.15s, background 0.15s;
+      text-decoration: none;
+    }
+    .btn-outline:hover { border-color: var(--navy); background: #F8FAFF; }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); transition: box-shadow 0.2s; }
+
+    /* Hero dashboard mockup */
+    .dashboard-mockup {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 30px 60px rgba(27,43,94,0.15), 0 4px 16px rgba(0,0,0,0.06);
+      transform: perspective(1200px) rotateY(-3deg) rotateX(1deg);
+      overflow: hidden;
+      font-size: 11px;
+    }
+
+    /* Feature tabs */
+    .tab-btn { cursor: pointer; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 500; border: none; background: transparent; color: var(--muted); transition: all 0.15s; }
+    .tab-btn.active { background: var(--navy); color: white; }
+
+    /* Pricing highlight */
+    .pricing-featured {
+      border: 2px solid var(--navy) !important;
+      position: relative;
+    }
+
+    /* Testimonial */
+    .testimonial-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+
+    /* Section alternation */
+    .section-light { background: var(--bg); }
+    .section-white { background: white; }
+    .section-navy { background: var(--navy); }
+  </style>
+</head>
+<body style="background: var(--bg); color: var(--foreground);">
+
+  <div class="design-label">Design Landing-A — "Güven ve Basitlik"</div>
+
+  <!-- ─── NAV ─── -->
+  <nav class="nav-sticky">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2">
+        <div style="width:32px;height:32px;background:var(--navy);border-radius:7px;display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:6px;">
+          <div style="background:white;border-radius:2px;"></div>
+          <div style="background:var(--red);border-radius:2px;"></div>
+          <div style="background:white;border-radius:2px;opacity:0.6;"></div>
+          <div style="background:white;border-radius:2px;"></div>
+        </div>
+        <span style="font-size:20px;font-weight:700;color:var(--navy);letter-spacing:-0.03em;">blocero</span>
+      </a>
+      <!-- Links -->
+      <div class="hidden md:flex items-center gap-7">
+        <a href="#" style="color:var(--muted);font-size:15px;font-weight:500;text-decoration:none;">Özellikler</a>
+        <a href="#" style="color:var(--muted);font-size:15px;font-weight:500;text-decoration:none;">Fiyatlandırma</a>
+        <a href="#" style="color:var(--muted);font-size:15px;font-weight:500;text-decoration:none;">Rakip Karşılaştırma</a>
+        <a href="#" style="color:var(--muted);font-size:15px;font-weight:500;text-decoration:none;">Blog</a>
+      </div>
+      <!-- CTA -->
+      <div class="flex items-center gap-3">
+        <a href="#" class="btn-outline" style="padding:8px 16px;font-size:14px;">Giriş Yap</a>
+        <a href="#" class="btn-primary" style="padding:8px 18px;font-size:14px;">Ücretsiz Başla →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="section-light" style="padding: 80px 24px 96px;">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Sol: Text -->
+        <div>
+          <!-- Eyebrow -->
+          <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #CBD5E1;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--navy);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:24px;">
+            <div style="width:6px;height:6px;background:var(--navy);border-radius:50%;"></div>
+            Türkiye'nin İlk Apartman Ekosistemi
+          </div>
+
+          <!-- H1 -->
+          <h1 style="font-size:clamp(36px,5vw,52px);font-weight:700;color:var(--navy);line-height:1.15;letter-spacing:-0.03em;margin-bottom:20px;">
+            Apartmanınızı<br>Yönetin, Sakinlerinizle<br>Büyüyün.
+          </h1>
+
+          <!-- Subtext -->
+          <p style="font-size:18px;color:var(--muted);line-height:1.65;margin-bottom:32px;max-width:480px;">
+            Aidat takibi, gider şeffaflığı, kapıcı yönetimi ve hiperlokal reklam geliri —<br>
+            <strong style="color:var(--foreground);">tek platformda.</strong> Rakip yazılımlarda olmayan her şey Blocero'da var.
+          </p>
+
+          <!-- CTAs -->
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
+            <a href="#" class="btn-primary" style="font-size:16px;padding:12px 26px;">
+              Ücretsiz Başla
+              <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </a>
+            <a href="#" class="btn-outline" style="font-size:16px;padding:12px 22px;">
+              <i data-lucide="play-circle" style="width:16px;height:16px;"></i>
+              Demo İzle
+            </a>
+          </div>
+
+          <!-- Micro-copy -->
+          <div style="display:flex;gap:20px;flex-wrap:wrap;">
+            <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#16A34A;"></i>
+              Kredi kartı gerekmez
+            </span>
+            <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#16A34A;"></i>
+              5 dakikada kurulum
+            </span>
+            <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#16A34A;"></i>
+              50 daireye kadar ücretsiz
+            </span>
+          </div>
+        </div>
+
+        <!-- Sağ: Dashboard Mockup -->
+        <div class="hidden lg:block">
+          <div class="dashboard-mockup">
+            <!-- Mockup Topbar -->
+            <div style="background:var(--navy);padding:10px 14px;display:flex;align-items:center;gap:8px;">
+              <div style="display:flex;gap:5px;">
+                <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.25);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.25);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.25);"></div>
+              </div>
+              <div style="flex:1;background:rgba(255,255,255,0.1);border-radius:4px;height:18px;display:flex;align-items:center;padding:0 8px;">
+                <span style="color:rgba(255,255,255,0.5);font-size:10px;">app.blocero.com/dashboard</span>
+              </div>
+            </div>
+            <!-- Mockup Body -->
+            <div style="display:flex;min-height:260px;">
+              <!-- Sidebar -->
+              <div style="width:140px;background:var(--navy);padding:12px 8px;flex-shrink:0;">
+                <div style="color:rgba(255,255,255,0.4);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:0 8px;margin-bottom:8px;">MENÜ</div>
+                <div style="background:rgba(255,255,255,0.12);border-radius:6px;padding:7px 10px;margin-bottom:2px;display:flex;align-items:center;gap:6px;">
+                  <div style="width:12px;height:12px;background:rgba(255,255,255,0.5);border-radius:3px;"></div>
+                  <span style="color:white;font-size:10px;font-weight:500;">Dashboard</span>
+                </div>
+                <div style="padding:7px 10px;margin-bottom:2px;display:flex;align-items:center;gap:6px;">
+                  <div style="width:12px;height:12px;background:rgba(255,255,255,0.2);border-radius:3px;"></div>
+                  <span style="color:rgba(255,255,255,0.5);font-size:10px;">Sakinler</span>
+                </div>
+                <div style="padding:7px 10px;margin-bottom:2px;display:flex;align-items:center;justify-content:space-between;">
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <div style="width:12px;height:12px;background:rgba(255,255,255,0.2);border-radius:3px;"></div>
+                    <span style="color:rgba(255,255,255,0.5);font-size:10px;">Aidat</span>
+                  </div>
+                  <div style="background:#E32B2B;color:white;font-size:8px;border-radius:10px;padding:1px 5px;">8</div>
+                </div>
+                <div style="padding:7px 10px;margin-bottom:2px;display:flex;align-items:center;gap:6px;">
+                  <div style="width:12px;height:12px;background:rgba(255,255,255,0.2);border-radius:3px;"></div>
+                  <span style="color:rgba(255,255,255,0.5);font-size:10px;">Giderler</span>
+                </div>
+                <div style="padding:7px 10px;display:flex;align-items:center;gap:6px;">
+                  <div style="width:12px;height:12px;background:rgba(255,255,255,0.2);border-radius:3px;"></div>
+                  <span style="color:rgba(255,255,255,0.5);font-size:10px;">Kapıcı</span>
+                </div>
+              </div>
+              <!-- Main Content -->
+              <div style="flex:1;padding:14px;background:#F8F9FC;">
+                <!-- Stats row -->
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;">
+                  <div style="background:white;border:1px solid #E2E8F0;border-radius:7px;padding:10px;">
+                    <div style="font-size:8px;color:#64748B;margin-bottom:3px;">Toplam Aidat</div>
+                    <div style="font-size:14px;font-weight:700;color:#1B2B5E;">₺48.500</div>
+                    <div style="font-size:8px;color:#16A34A;">↑ %12</div>
+                  </div>
+                  <div style="background:white;border:1px solid #E2E8F0;border-radius:7px;padding:10px;">
+                    <div style="font-size:8px;color:#64748B;margin-bottom:3px;">Bekleyen</div>
+                    <div style="font-size:14px;font-weight:700;color:#E32B2B;">12</div>
+                    <div style="font-size:8px;color:#64748B;">daire</div>
+                  </div>
+                  <div style="background:white;border:1px solid #E2E8F0;border-radius:7px;padding:10px;">
+                    <div style="font-size:8px;color:#64748B;margin-bottom:3px;">Bu Ay Gider</div>
+                    <div style="font-size:14px;font-weight:700;color:#1B2B5E;">₺12.300</div>
+                    <div style="font-size:8px;color:#64748B;">8 kalem</div>
+                  </div>
+                  <div style="background:white;border:1px solid #E2E8F0;border-radius:7px;padding:10px;">
+                    <div style="font-size:8px;color:#64748B;margin-bottom:3px;">Sakinler</div>
+                    <div style="font-size:14px;font-weight:700;color:#1B2B5E;">84</div>
+                    <div style="font-size:8px;color:#16A34A;">76 aktif</div>
+                  </div>
+                </div>
+                <!-- Mini table -->
+                <div style="background:white;border:1px solid #E2E8F0;border-radius:7px;overflow:hidden;">
+                  <div style="padding:8px 12px;border-bottom:1px solid #E2E8F0;font-size:9px;font-weight:600;color:#1B2B5E;">Aidat Durumu</div>
+                  <div style="padding:6px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F8F9FC;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <div style="width:18px;height:18px;border-radius:50%;background:#E2E8F0;font-size:8px;display:flex;align-items:center;justify-content:center;color:#64748B;">M</div>
+                      <span style="font-size:9px;color:#0F172A;">Mehmet A. — D:12</span>
+                    </div>
+                    <div style="background:#DCFCE7;color:#16A34A;font-size:8px;border-radius:10px;padding:2px 7px;font-weight:600;">Ödendi</div>
+                  </div>
+                  <div style="padding:6px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F8F9FC;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <div style="width:18px;height:18px;border-radius:50%;background:#FEE2E2;font-size:8px;display:flex;align-items:center;justify-content:center;color:#E32B2B;">A</div>
+                      <span style="font-size:9px;color:#0F172A;">Ayşe K. — D:5</span>
+                    </div>
+                    <div style="background:#FEF3C7;color:#D97706;font-size:8px;border-radius:10px;padding:2px 7px;font-weight:600;">Bekliyor</div>
+                  </div>
+                  <div style="padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <div style="width:18px;height:18px;border-radius:50%;background:#E2E8F0;font-size:8px;display:flex;align-items:center;justify-content:center;color:#64748B;">F</div>
+                      <span style="font-size:9px;color:#0F172A;">Fatma Y. — D:3</span>
+                    </div>
+                    <div style="background:#FEE2E2;color:#E32B2B;font-size:8px;border-radius:10px;padding:2px 7px;font-weight:600;">Gecikmeli</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TRUST BAR ─── -->
+  <div style="background:white;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 24px;">
+    <div class="max-w-6xl mx-auto" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <span style="font-size:14px;color:var(--muted);font-weight:500;">200+ site güveniyor</span>
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <!-- iyzico -->
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#F8F9FC;border:1px solid var(--border);border-radius:6px;">
+          <i data-lucide="shield-check" style="width:14px;height:14px;color:#16A34A;"></i>
+          <span style="font-size:12px;font-weight:600;color:var(--foreground);">iyzico Güvenceli</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#F8F9FC;border:1px solid var(--border);border-radius:6px;">
+          <i data-lucide="lock" style="width:14px;height:14px;color:var(--navy);"></i>
+          <span style="font-size:12px;font-weight:600;color:var(--foreground);">KVKK Uyumlu</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#F8F9FC;border:1px solid var(--border);border-radius:6px;">
+          <i data-lucide="badge-check" style="width:14px;height:14px;color:var(--navy);"></i>
+          <span style="font-size:12px;font-weight:600;color:var(--foreground);">PCI-DSS Güvenli</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:64px;height:24px;background:#F1F5F9;border-radius:4px;"></div>
+          <div style="width:64px;height:24px;background:#F1F5F9;border-radius:4px;"></div>
+          <div style="width:64px;height:24px;background:#F1F5F9;border-radius:4px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PROBLEM / SOLUTION ─── -->
+  <section class="section-white" style="padding:80px 24px;">
+    <div class="max-w-6xl mx-auto">
+      <div style="text-align:center;margin-bottom:56px;">
+        <h2 style="font-size:clamp(28px,4vw,38px);font-weight:700;color:var(--navy);letter-spacing:-0.02em;margin-bottom:12px;">Tanıdık geliyor mu?</h2>
+        <p style="font-size:17px;color:var(--muted);">Türkiye'deki site yöneticilerinin günlük mücadelesi — ve Blocero ile çözümü.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+
+        <!-- Card 1 -->
+        <div class="card" style="padding:28px;">
+          <div style="width:44px;height:44px;background:#FEF3C7;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <i data-lucide="message-circle-warning" style="width:22px;height:22px;color:#D97706;"></i>
+          </div>
+          <h3 style="font-size:18px;font-weight:700;color:var(--foreground);margin-bottom:8px;">WhatsApp Kaosu</h3>
+          <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:16px;">Aidat takibini WhatsApp gruplarında yapıyorsunuz. Kim ödedi, kim ödemedi belirsiz. Her ay aynı drama tekrar ediyor.</p>
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#F0FDF4;border-radius:8px;border:1px solid #BBF7D0;">
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i>
+            <span style="font-size:13px;color:#15803D;font-weight:500;">Blocero ile otomatik aidat takibi ve hatırlatma</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card" style="padding:28px;">
+          <div style="width:44px;height:44px;background:#FEE2E2;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <i data-lucide="eye-off" style="width:22px;height:22px;color:#E32B2B;"></i>
+          </div>
+          <h3 style="font-size:18px;font-weight:700;color:var(--foreground);margin-bottom:8px;">Şeffafsız Giderler</h3>
+          <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:16px;">Sakinler paranın nereye gittiğini bilmiyor, şikayet geliyor. Her ay hesap sormak zorunda kalıyorsunuz.</p>
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#F0FDF4;border-radius:8px;border:1px solid #BBF7D0;">
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i>
+            <span style="font-size:13px;color:#15803D;font-weight:500;">Anlık gider raporu — sakinler uygulamadan takip eder</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card" style="padding:28px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:12px;right:12px;background:var(--navy);color:white;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:0.03em;">SEKTÖRDE İLK</div>
+          <div style="width:44px;height:44px;background:#EFF6FF;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <i data-lucide="user-x" style="width:22px;height:22px;color:var(--navy);"></i>
+          </div>
+          <h3 style="font-size:18px;font-weight:700;color:var(--foreground);margin-bottom:8px;">Kapıcı Takibi Yok</h3>
+          <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:16px;">Kapıcı geldi mi, görevi yaptı mı? Çöp alındı mı? Hiçbir rakip apartman yazılımında bu takip yok.</p>
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#F0FDF4;border-radius:8px;border:1px solid #BBF7D0;">
+            <i data-lucide="check-circle-2" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i>
+            <span style="font-size:13px;color:#15803D;font-weight:500;">Dijital kapıcı log — görev, çöp, paket takibi</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURE GRID — TABBED ─── -->
+  <section class="section-light" style="padding:80px 24px;">
+    <div class="max-w-6xl mx-auto">
+      <div style="text-align:center;margin-bottom:32px;">
+        <h2 style="font-size:clamp(28px,4vw,38px);font-weight:700;color:var(--navy);letter-spacing:-0.02em;margin-bottom:12px;">Her Kullanıcıya Özel</h2>
+        <p style="font-size:17px;color:var(--muted);">Yönetici, sakin ve kapıcı — herkesin ihtiyacına göre tasarlandı.</p>
+        <!-- Tabs -->
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:24px;background:white;border:1px solid var(--border);border-radius:24px;padding:4px;width:fit-content;margin-left:auto;margin-right:auto;">
+          <button class="tab-btn active" onclick="switchTab('yonetici',this)">Yönetici</button>
+          <button class="tab-btn" onclick="switchTab('sakin',this)">Sakin</button>
+          <button class="tab-btn" onclick="switchTab('kapici',this)">Kapıcı</button>
+        </div>
+      </div>
+
+      <div id="tab-yonetici" class="tab-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+        <div class="card" style="padding:24px;">
+          <div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+            <i data-lucide="wallet" style="width:20px;height:20px;color:var(--navy);"></i>
+          </div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--foreground);margin-bottom:6px;">Aidat Takibi</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Otomatik hesaplama, geç ücret, iyzico ödeme entegrasyonu ve hatırlatma SMS'i.</p>
+        </div>
+        <div class="card" style="padding:24px;">
+          <div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+            <i data-lucide="receipt" style="width:20px;height:20px;color:var(--navy);"></i>
+          </div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--foreground);margin-bottom:6px;">Gider Yönetimi</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Makbuz fotoğrafı, kategori bazlı raporlama, sakinlere şeffaf aylık rapor.</p>
+        </div>
+        <div class="card" style="padding:24px;">
+          <div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+            <i data-lucide="megaphone" style="width:20px;height:20px;color:var(--navy);"></i>
+          </div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--foreground);margin-bottom:6px;">Duyuru & Oylama</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Pin, kategori, okundu takibi, anket oluşturma ve otomatik karar defteri.</p>
+        </div>
+        <div class="card" style="padding:24px;">
+          <div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+            <i data-lucide="clipboard-list" style="width:20px;height:20px;color:var(--navy);"></i>
+          </div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--foreground);margin-bottom:6px;">Kapıcı Yönetimi</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Dijital puantaj, görev listesi, çöp 3-adım log, paket teslim bildirimi — sektörde ilk.</p>
+        </div>
+        <div class="card" style="padding:24px;">
+          <div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+            <i data-lucide="bar-chart-2" style="width:20px;height:20px;color:var(--navy);"></i>
+          </div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--foreground);margin-bottom:6px;">Raporlama</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Aylık özet, bütçe vs. gerçek karşılaştırma, PDF export ve e-posta dağıtımı.</p>
+        </div>
+        <div class="card" style="padding:24px;">
+          <div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+            <i data-lucide="users" style="width:20px;height:20px;color:var(--navy);"></i>
+          </div>
+          <h3 style="font-size:16px;font-weight:700;color:var(--foreground);margin-bottom:6px;">Sakin Yönetimi</h3>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;">Daire bazlı sakin kaydı, davet linki ile kolay onboarding ve iletişim geçmişi.</p>
+        </div>
+      </div>
+
+      <div id="tab-sakin" class="tab-content" style="display:none;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+        <div class="card" style="padding:24px;"><div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><i data-lucide="credit-card" style="width:20px;height:20px;color:var(--navy);"></i></div><h3 style="font-size:16px;font-weight:700;margin-bottom:6px;">Kolay Ödeme</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Kredi kartı ile 1 dokunuşla aidat ödemesi. iyzico güvenceli, anında makbuz.</p></div>
+        <div class="card" style="padding:24px;"><div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><i data-lucide="file-text" style="width:20px;height:20px;color:var(--navy);"></i></div><h3 style="font-size:16px;font-weight:700;margin-bottom:6px;">Gider Şeffaflığı</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Aylık gider raporu ve makbuz fotoğrafları — paranın nereye gittiğini görün.</p></div>
+        <div class="card" style="padding:24px;"><div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><i data-lucide="vote" style="width:20px;height:20px;color:var(--navy);"></i></div><h3 style="font-size:16px;font-weight:700;margin-bottom:6px;">Oylamaya Katıl</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Site kararlarına mobil üzerinden oy kullanın, sonuçları anında öğrenin.</p></div>
+        <div class="card" style="padding:24px;"><div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><i data-lucide="package" style="width:20px;height:20px;color:var(--navy);"></i></div><h3 style="font-size:16px;font-weight:700;margin-bottom:6px;">Paket Bildirimi</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Kapıcı paketinizi teslim aldığında anında push bildirim alın.</p></div>
+      </div>
+
+      <div id="tab-kapici" class="tab-content" style="display:none;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+        <div class="card" style="padding:24px;"><div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><i data-lucide="clock" style="width:20px;height:20px;color:var(--navy);"></i></div><h3 style="font-size:16px;font-weight:700;margin-bottom:6px;">Dijital Puantaj</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Uygulama girişi = otomatik giriş kaydı. Kağıt defter yok, ihtilaf yok.</p></div>
+        <div class="card" style="padding:24px;"><div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><i data-lucide="trash-2" style="width:20px;height:20px;color:var(--navy);"></i></div><h3 style="font-size:16px;font-weight:700;margin-bottom:6px;">Çöp 3-Adım Log</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Çöp toplama görevi tamamlandığında sakinlere otomatik bildirim gönderilir.</p></div>
+        <div class="card" style="padding:24px;"><div style="width:40px;height:40px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;"><i data-lucide="check-square" style="width:20px;height:20px;color:var(--navy);"></i></div><h3 style="font-size:16px;font-weight:700;margin-bottom:6px;">Görev Listesi</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;">Günlük temizlik, asansör, park alanı — her görevi işaretle, yönetici görür.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HIPERLOKAL REKLAM — Dark Navy Section ─── -->
+  <section class="section-navy" style="padding:80px 24px;">
+    <div class="max-w-6xl mx-auto">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;" class="grid-cols-1 lg:grid-cols-2">
+
+        <!-- Text -->
+        <div>
+          <div style="display:inline-flex;align-items:center;gap:6px;background:var(--red);color:white;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:20px;">
+            <i data-lucide="star" style="width:12px;height:12px;"></i>
+            Sadece Blocero'da
+          </div>
+          <h2 style="font-size:clamp(26px,4vw,38px);font-weight:700;color:white;letter-spacing:-0.02em;margin-bottom:16px;line-height:1.25;">
+            Platform yönetmenizi kolaylaştırır.<br>Ek olarak size <span style="color:#FCA5A5;">gelir kazandırır.</span>
+          </h2>
+          <p style="font-size:17px;color:rgba(255,255,255,0.72);line-height:1.65;margin-bottom:32px;">
+            Sitenize komşu işletmeler, yerel markalar reklam vermek istiyor. Blocero bu reklamları sakin uygulamasına taşır — tıklama başına komisyon doğrudan sizin hesabınıza aktarılır.
+          </p>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:28px;height:28px;background:rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+                <span style="color:white;font-size:12px;font-weight:700;">1</span>
+              </div>
+              <div>
+                <div style="color:white;font-size:15px;font-weight:600;margin-bottom:2px;">Yerel işletme kampanya oluşturur</div>
+                <div style="color:rgba(255,255,255,0.6);font-size:13px;">ads.blocero üzerinden mahalle, ilçe bazlı hedefleme yapar.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:28px;height:28px;background:rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+                <span style="color:white;font-size:12px;font-weight:700;">2</span>
+              </div>
+              <div>
+                <div style="color:white;font-size:15px;font-weight:600;margin-bottom:2px;">Sakinler reklamı görür</div>
+                <div style="color:rgba(255,255,255,0.6);font-size:13px;">Uygulama ana ekranında yerli ve komşu işletme reklamları gösterilir.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:28px;height:28px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+                <span style="color:white;font-size:12px;font-weight:700;">3</span>
+              </div>
+              <div>
+                <div style="color:white;font-size:15px;font-weight:600;margin-bottom:2px;">Tıklama başına siz kazanırsınız</div>
+                <div style="color:rgba(255,255,255,0.6);font-size:13px;">Aylık reklam geliri raporunuz panelde görünür, ödeme otomatik gelir.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Harita / Görsel -->
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:28px;text-align:center;">
+          <!-- Simplified Turkey map SVG -->
+          <svg viewBox="0 0 400 200" style="width:100%;height:auto;opacity:0.6;">
+            <rect x="10" y="40" width="380" height="130" rx="8" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <!-- Turkey silhouette rough approximation -->
+            <path d="M 20 100 Q 60 60 120 70 Q 160 75 200 65 Q 250 55 310 70 Q 360 80 380 90 Q 370 120 340 130 Q 290 145 240 140 Q 200 138 160 145 Q 120 150 80 140 Q 40 130 20 100 Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <!-- Highlighted district circles -->
+            <circle cx="180" cy="100" r="20" fill="rgba(227,43,43,0.3)" stroke="#E32B2B" stroke-width="1.5"/>
+            <circle cx="220" cy="90" r="14" fill="rgba(227,43,43,0.2)" stroke="#E32B2B" stroke-width="1"/>
+            <circle cx="260" cy="105" r="10" fill="rgba(227,43,43,0.15)" stroke="rgba(227,43,43,0.5)" stroke-width="1"/>
+            <circle cx="140" cy="110" r="8" fill="rgba(227,43,43,0.1)" stroke="rgba(227,43,43,0.4)" stroke-width="1"/>
+            <!-- Ads pins -->
+            <circle cx="180" cy="100" r="5" fill="#E32B2B"/>
+            <circle cx="220" cy="90" r="4" fill="#E32B2B"/>
+          </svg>
+          <p style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:8px;">Mahalle ve ilçe bazlı reklam hedefleme</p>
+          <!-- Stat boxes -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;">
+            <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:12px;">
+              <div style="color:white;font-size:20px;font-weight:700;">₺850</div>
+              <div style="color:rgba(255,255,255,0.5);font-size:11px;">ort. aylık reklam geliri / site</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:12px;">
+              <div style="color:white;font-size:20px;font-weight:700;">50+</div>
+              <div style="color:rgba(255,255,255,0.5);font-size:11px;">aktif reklam kampanyası</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SOCIAL PROOF ─── -->
+  <section class="section-white" style="padding:80px 24px;">
+    <div class="max-w-6xl mx-auto">
+      <div style="text-align:center;margin-bottom:48px;">
+        <h2 style="font-size:clamp(28px,4vw,38px);font-weight:700;color:var(--navy);letter-spacing:-0.02em;margin-bottom:12px;">Yöneticiler Ne Diyor?</h2>
+        <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:8px;">
+          <i data-lucide="star" style="width:16px;height:16px;color:#FBBF24;fill:#FBBF24;"></i>
+          <i data-lucide="star" style="width:16px;height:16px;color:#FBBF24;fill:#FBBF24;"></i>
+          <i data-lucide="star" style="width:16px;height:16px;color:#FBBF24;fill:#FBBF24;"></i>
+          <i data-lucide="star" style="width:16px;height:16px;color:#FBBF24;fill:#FBBF24;"></i>
+          <i data-lucide="star" style="width:16px;height:16px;color:#FBBF24;fill:#FBBF24;"></i>
+          <span style="font-size:14px;color:var(--muted);margin-left:6px;">4.9/5 — 200+ değerlendirme</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+
+        <div class="testimonial-card">
+          <div style="display:flex;gap:2px;margin-bottom:14px;">
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+          </div>
+          <p style="font-size:15px;color:var(--foreground);line-height:1.65;margin-bottom:20px;">"WhatsApp gruplarından kurtulduk. Artık kim ödedi kim ödemedi belli, hatırlatma mesajlarını ben göndermiyorum — sistem otomatik gönderiyor."</p>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:38px;height:38px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px;">MA</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--foreground);">Mustafa Arslan</div>
+              <div style="font-size:12px;color:var(--muted);">Site Yöneticisi · Trabzon, 48 daire</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div style="display:flex;gap:2px;margin-bottom:14px;">
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+          </div>
+          <p style="font-size:15px;color:var(--foreground);line-height:1.65;margin-bottom:20px;">"Sakinler gider raporunu uygulama üzerinden görünce şikayet sıfıra indi. Kapıcı takibi özelliği ise başka hiçbir yazılımda yok — gerçekten fark yarattı."</p>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:38px;height:38px;background:#7C3AED;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px;">ZK</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--foreground);">Zeynep Kaya</div>
+              <div style="font-size:12px;color:var(--muted);">Apartman Yöneticisi · İstanbul, 72 daire</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div style="display:flex;gap:2px;margin-bottom:14px;">
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;color:#FBBF24;fill:#FBBF24;"></i>
+          </div>
+          <p style="font-size:15px;color:var(--foreground);line-height:1.65;margin-bottom:20px;">"Reklam geliri özelliği sayesinde aylık aidat yüküne katkı sağlamaya başladık. Blocero'nun bu modeli rakip hiçbir yazılımda yok."</p>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:38px;height:38px;background:#059669;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px;">HA</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--foreground);">Hasan Aydın</div>
+              <div style="font-size:12px;color:var(--muted);">Site Yönetim Şirketi · Ankara, 5 site</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PRICING ─── -->
+  <section class="section-light" style="padding:80px 24px;" id="fiyatlandirma">
+    <div class="max-w-5xl mx-auto">
+      <div style="text-align:center;margin-bottom:48px;">
+        <h2 style="font-size:clamp(28px,4vw,38px);font-weight:700;color:var(--navy);letter-spacing:-0.02em;margin-bottom:12px;">Şeffaf Fiyatlandırma</h2>
+        <p style="font-size:17px;color:var(--muted);">Ücretsiz başlayın, reklam gelirinizle büyüyün.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;align-items:start;">
+
+        <!-- Ücretsiz -->
+        <div class="card" style="padding:28px;">
+          <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Ücretsiz</div>
+          <div style="font-size:36px;font-weight:700;color:var(--foreground);margin-bottom:4px;">₺0</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">/ ay · 50 bağımsız bölüme kadar</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Aidat takibi</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Gider yönetimi</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Duyurular</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Sakin uygulaması</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);"><i data-lucide="minus" style="width:16px;height:16px;color:#CBD5E1;flex-shrink:0;"></i> Kapıcı yönetimi</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);"><i data-lucide="minus" style="width:16px;height:16px;color:#CBD5E1;flex-shrink:0;"></i> Reklam geliri</div>
+          </div>
+          <a href="#" class="btn-outline" style="width:100%;justify-content:center;padding:11px;">Ücretsiz Başla</a>
+        </div>
+
+        <!-- Büyüme — Featured -->
+        <div class="card pricing-featured" style="padding:28px;position:relative;">
+          <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--navy);color:white;font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap;letter-spacing:0.03em;">EN POPÜLER</div>
+          <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Büyüme</div>
+          <div style="font-size:36px;font-weight:700;color:var(--foreground);margin-bottom:4px;">₺299</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">/ ay · 500 bağımsız bölüme kadar</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Tüm Ücretsiz özellikler</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Kapıcı yönetimi</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Hiperlokal reklam geliri</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> PDF raporlar + export</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Oylama & karar defteri</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Öncelikli destek</div>
+          </div>
+          <a href="#" class="btn-primary" style="width:100%;justify-content:center;padding:12px;">Hemen Başla</a>
+          <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;">Reklam geliriyle planın ücreti karşılanabilir</p>
+        </div>
+
+        <!-- Kurumsal -->
+        <div class="card" style="padding:28px;">
+          <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Kurumsal</div>
+          <div style="font-size:36px;font-weight:700;color:var(--foreground);margin-bottom:4px;">Teklif Alın</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">Sınırsız bağımsız bölüm</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Tüm Büyüme özellikleri</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Toplu site indirimi</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> SLA garantisi (%99.9)</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Özel onboarding</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><i data-lucide="check" style="width:16px;height:16px;color:#16A34A;flex-shrink:0;"></i> Hesap yöneticisi</div>
+          </div>
+          <a href="#" class="btn-outline" style="width:100%;justify-content:center;padding:11px;">Bizimle İletişime Geçin</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FINAL CTA ─── -->
+  <section class="section-navy" style="padding:72px 24px;">
+    <div class="max-w-2xl mx-auto" style="text-align:center;">
+      <h2 style="font-size:clamp(28px,4vw,38px);font-weight:700;color:white;letter-spacing:-0.02em;margin-bottom:14px;">
+        Apartmanınızı dijitalleştirmeye hazır mısınız?
+      </h2>
+      <p style="font-size:17px;color:rgba(255,255,255,0.7);margin-bottom:32px;">Ücretsiz başlayın, istediğiniz zaman iptal edin. İlk 50 bağımsız bölüm sonsuza kadar ücretsiz.</p>
+      <a href="#" style="display:inline-flex;align-items:center;gap:8px;background:var(--red);color:white;padding:14px 32px;border-radius:8px;font-weight:700;font-size:17px;text-decoration:none;">
+        Ücretsiz Başla
+        <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+      </a>
+      <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:12px;">Kredi kartı gerekmez · Kişisel destek dahil</p>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer style="background:#0A1628;padding:56px 24px 32px;">
+    <div class="max-w-6xl mx-auto">
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+            <div style="width:28px;height:28px;background:var(--navy);border-radius:6px;display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:5px;">
+              <div style="background:white;border-radius:2px;"></div>
+              <div style="background:var(--red);border-radius:2px;"></div>
+              <div style="background:white;border-radius:2px;opacity:0.5;"></div>
+              <div style="background:white;border-radius:2px;"></div>
+            </div>
+            <span style="font-size:18px;font-weight:700;color:white;letter-spacing:-0.03em;">blocero</span>
+          </div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.7;max-width:240px;">Türkiye'nin ilk all-in-one apartman yönetim ekosistemi. 200+ site, 16.000+ sakin.</p>
+        </div>
+        <div>
+          <div style="color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;">Ürün</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">Özellikler</a>
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">Fiyatlandırma</a>
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">Demo</a>
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">Rakip Karşılaştırma</a>
+          </div>
+        </div>
+        <div>
+          <div style="color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;">Şirket</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">Hakkımızda</a>
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">Blog</a>
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">İletişim</a>
+          </div>
+        </div>
+        <div>
+          <div style="color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;">Yasal</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">KVKK Politikası</a>
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">Kullanım Şartları</a>
+            <a href="#" style="color:rgba(255,255,255,0.45);font-size:14px;text-decoration:none;">Gizlilik</a>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:24px;display:flex;align-items:center;justify-content:space-between;">
+        <p style="color:rgba(255,255,255,0.3);font-size:13px;">© 2026 Blocero. Tüm hakları saklıdır.</p>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <i data-lucide="shield-check" style="width:14px;height:14px;color:rgba(255,255,255,0.3);"></i>
+          <span style="color:rgba(255,255,255,0.3);font-size:12px;">KVKK & PCI-DSS Uyumlu</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    function switchTab(tab, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById('tab-' + tab);
+      if (target) { target.style.display = 'grid'; }
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

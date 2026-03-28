@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blocero — Admin Dashboard (shadcn/ui)</title>
+<!--
+  ADMIN DASHBOARD — shadcn/ui visual language
+  Component map (shadcn primitives simulated in vanilla CSS):
+    Button (default, outline, ghost, destructive, sm)
+    Card (CardHeader, CardContent, CardFooter)
+    Badge (default, secondary, destructive, outline)
+    Table (TableHeader, TableBody, TableRow, TableCell)
+    Tabs (TabsList, TabsTrigger, TabsContent)
+    Avatar (AvatarFallback)
+    Separator
+    Input
+    Select
+  Tailwind-style spacing, radius (--radius: 0.5rem), zinc color scale
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── shadcn/ui CSS token spec ── */
+  :root {
+    --background: #ffffff;
+    --foreground: #09090b;
+    --card: #ffffff;
+    --card-foreground: #09090b;
+    --popover: #ffffff;
+    --popover-foreground: #09090b;
+    --primary: #1B2B5E;
+    --primary-foreground: #fafafa;
+    --secondary: #f4f4f5;
+    --secondary-foreground: #18181b;
+    --muted: #f4f4f5;
+    --muted-foreground: #71717a;
+    --accent: #f4f4f5;
+    --accent-foreground: #18181b;
+    --destructive: #E32B2B;
+    --destructive-foreground: #fafafa;
+    --border: #e4e4e7;
+    --input: #e4e4e7;
+    --ring: #1B2B5E;
+    --radius: 0.5rem;
+    --sidebar-bg: #1B2B5E;
+    --sidebar-fg: rgba(255,255,255,0.85);
+    --sidebar-border: rgba(255,255,255,0.1);
+    --sidebar-accent: rgba(255,255,255,0.1);
+    --sidebar-muted: rgba(255,255,255,0.45);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── shadcn/ui: Button ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.15s, opacity 0.15s;
+    height: 36px;
+    padding: 0 16px;
+  }
+  .btn-default { background: var(--primary); color: var(--primary-foreground); }
+  .btn-default:hover { opacity: 0.9; }
+  .btn-destructive { background: var(--destructive); color: var(--destructive-foreground); }
+  .btn-destructive:hover { opacity: 0.9; }
+  .btn-outline { background: transparent; border-color: var(--border); color: var(--foreground); }
+  .btn-outline:hover { background: var(--accent); }
+  .btn-secondary { background: var(--secondary); color: var(--secondary-foreground); }
+  .btn-secondary:hover { opacity: 0.8; }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--foreground); }
+  .btn-ghost:hover { background: var(--accent); }
+  .btn-sm { height: 30px; padding: 0 12px; font-size: 13px; }
+  .btn-icon { width: 36px; padding: 0; }
+
+  /* ── shadcn/ui: Badge ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 10px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .badge-default { background: var(--primary); color: var(--primary-foreground); }
+  .badge-secondary { background: var(--secondary); color: var(--secondary-foreground); }
+  .badge-destructive { background: var(--destructive); color: var(--destructive-foreground); }
+  .badge-outline { border-color: var(--border); color: var(--foreground); background: transparent; }
+  .badge-success { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+  .badge-warning { background: #fef9c3; color: #a16207; border-color: #fde047; }
+  .badge-info    { background: #dbeafe; color: #1d4ed8; border-color: #bfdbfe; }
+
+  /* ── shadcn/ui: Card ── */
+  .card {
+    background: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 4px);
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title { font-size: 15px; font-weight: 600; color: var(--foreground); }
+  .card-description { font-size: 13px; color: var(--muted-foreground); margin-top: 2px; }
+  .card-content { padding: 20px; }
+  .card-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    background: var(--muted);
+  }
+
+  /* ── shadcn/ui: Tabs ── */
+  .tabs-list {
+    display: inline-flex;
+    align-items: center;
+    background: var(--muted);
+    border-radius: var(--radius);
+    padding: 3px;
+    gap: 2px;
+  }
+  .tabs-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 14px;
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tabs-trigger.active {
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .tabs-trigger:hover:not(.active) { color: var(--foreground); }
+
+  /* ── shadcn/ui: Table ── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { border-bottom: 1px solid var(--border); }
+  th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+  td { padding: 12px 16px; font-size: 13px; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--muted); }
+
+  /* ── shadcn/ui: Avatar ── */
+  .avatar {
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+  .avatar-sm { width: 28px; height: 28px; font-size: 11px; }
+  .avatar-md { width: 32px; height: 32px; }
+
+  /* ── shadcn/ui: Input ── */
+  .input {
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--foreground);
+    background: var(--background);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input:focus {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 2px rgba(27,43,94,0.15);
+  }
+  .input::placeholder { color: var(--muted-foreground); }
+
+  /* ── shadcn/ui: Select ── */
+  .select {
+    height: 30px;
+    padding: 0 28px 0 10px;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--foreground);
+    background: var(--background) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2371717a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+  }
+  .select:focus { border-color: var(--ring); }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--sidebar-bg);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border-right: 1px solid var(--sidebar-border);
+  }
+  .sidebar-header {
+    padding: 16px 12px;
+    border-bottom: 1px solid var(--sidebar-border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sidebar-logo-mark {
+    width: 30px; height: 30px;
+    background: var(--destructive);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .sidebar-logo-text { color: white; font-size: 16px; font-weight: 700; }
+  .sidebar-logo-sub { color: var(--sidebar-muted); font-size: 11px; }
+
+  .nav-section { padding: 12px 8px 4px; }
+  .nav-section-label {
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--sidebar-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: var(--radius);
+    color: var(--sidebar-fg);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.12s;
+    position: relative;
+  }
+  .nav-item:hover { background: var(--sidebar-accent); }
+  .nav-item.active { background: rgba(255,255,255,0.15); color: white; }
+  .nav-icon { font-size: 14px; width: 16px; text-align: center; flex-shrink: 0; opacity: 0.8; }
+  .nav-badge {
+    margin-left: auto;
+    min-width: 18px; height: 18px;
+    background: var(--destructive);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+  }
+  .sidebar-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--sidebar-border);
+    padding: 10px 8px;
+  }
+  .user-menu {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .user-menu:hover { background: var(--sidebar-accent); }
+  .user-menu-name { font-size: 12px; font-weight: 600; color: white; }
+  .user-menu-role { font-size: 11px; color: var(--sidebar-muted); }
+
+  /* ── Main ── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .topbar {
+    height: 56px;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    background: var(--background);
+  }
+  .topbar-title { font-size: 16px; font-weight: 600; }
+  .topbar-right { display: flex; align-items: center; gap: 8px; }
+
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat-card .card-content { display: flex; flex-direction: column; gap: 4px; padding: 16px; }
+  .stat-label { font-size: 12px; font-weight: 500; color: var(--muted-foreground); display: flex; align-items: center; justify-content: space-between; }
+  .stat-icon-wrap { width: 28px; height: 28px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 14px; background: var(--secondary); }
+  .stat-value { font-size: 22px; font-weight: 800; line-height: 1.1; }
+  .stat-sub { font-size: 12px; color: var(--muted-foreground); }
+  .stat-delta { font-size: 12px; font-weight: 500; }
+  .delta-up { color: #15803d; }
+  .delta-down { color: var(--destructive); }
+
+  /* Two-col */
+  .two-col { display: grid; grid-template-columns: 1fr 300px; gap: 16px; align-items: start; }
+  .side-col { display: flex; flex-direction: column; gap: 16px; }
+
+  /* Helpers */
+  .flex-between { display: flex; align-items: center; justify-content: space-between; }
+  .flex-center { display: flex; align-items: center; }
+  .gap-2 { gap: 8px; }
+
+  /* Avatar colors */
+  .av-blue { background: #dbeafe; color: #1d4ed8; }
+  .av-orange { background: #ffedd5; color: #c2410c; }
+  .av-green { background: #dcfce7; color: #15803d; }
+  .av-purple { background: #ede9fe; color: #7c3aed; }
+  .av-pink { background: #fce7f3; color: #be185d; }
+
+  /* Chart */
+  .mini-chart { display: flex; align-items: flex-end; gap: 4px; height: 48px; }
+  .mc-bar { flex: 1; border-radius: 3px 3px 0 0; background: var(--secondary); }
+  .mc-bar.active { background: var(--primary); }
+
+  /* Activity */
+  .activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-icon { width: 30px; height: 30px; border-radius: var(--radius); background: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .activity-body { flex: 1; }
+  .activity-title { font-size: 13px; font-weight: 500; }
+  .activity-desc { font-size: 12px; color: var(--muted-foreground); margin-top: 1px; }
+  .activity-time { font-size: 11px; color: var(--muted-foreground); flex-shrink: 0; margin-top: 2px; }
+
+  /* Ads */
+  .ads-entry { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .ads-entry:last-child { border-bottom: none; }
+  .ads-dot { width: 8px; height: 8px; border-radius: 9999px; flex-shrink: 0; }
+  .ads-info { flex: 1; min-width: 0; }
+  .ads-name { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ads-days { font-size: 11px; color: var(--muted-foreground); }
+  .ads-amount { font-size: 13px; font-weight: 600; color: #15803d; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo-mark">B</div>
+    <div>
+      <div class="sidebar-logo-text">Blocero</div>
+      <div class="sidebar-logo-sub">Panorama Sitesi</div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-item active">
+      <span class="nav-icon">🏠</span> Genel Bakış
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">💳</span> Aidat Takibi
+      <span class="nav-badge">4</span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">👥</span> Sakinler
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">📢</span> Duyurular
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">🔧</span> Arızalar
+      <span class="nav-badge">2</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Yönetim</div>
+    <div class="nav-item">
+      <span class="nav-icon">🏊</span> Rezervasyonlar
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">🚗</span> Araç & Güvenlik
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">📊</span> Finansal Rapor
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Gelir</div>
+    <div class="nav-item">
+      <span class="nav-icon">📣</span> Reklam Modülü
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-menu">
+      <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#4f86f7,#7c3aed);color:white;">AK</div>
+      <div style="flex:1;min-width:0;">
+        <div class="user-menu-name">Ahmet Kaya</div>
+        <div class="user-menu-role">Site Yöneticisi</div>
+      </div>
+      <span style="color:rgba(255,255,255,0.35);font-size:14px;">⋯</span>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="flex-center gap-2">
+      <span class="topbar-title">Genel Bakış</span>
+      <span class="badge badge-secondary" style="font-size:11px;">Mart 2026</span>
+    </div>
+    <div class="topbar-right">
+      <div style="position:relative;">
+        <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted-foreground);font-size:13px;">🔍</span>
+        <input class="input" style="width:196px;padding-left:30px;" placeholder="Sakin ara...">
+      </div>
+      <button class="btn btn-default btn-sm">+ Aidat Gönder</button>
+      <button class="btn btn-outline btn-sm btn-icon" style="position:relative;">
+        🔔
+        <span style="position:absolute;top:5px;right:5px;width:6px;height:6px;background:var(--destructive);border-radius:50%;border:1px solid white;"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="card stat-card">
+        <div class="card-content">
+          <div class="stat-label">Toplam Aidat <span class="stat-icon-wrap">💳</span></div>
+          <div class="stat-value">₺42.800</div>
+          <div class="stat-sub">Mart 2026</div>
+          <div class="stat-delta delta-up">↑ %8 geçen aya göre</div>
+        </div>
+      </div>
+      <div class="card stat-card">
+        <div class="card-content">
+          <div class="stat-label">Tahsilat Oranı <span class="stat-icon-wrap">✅</span></div>
+          <div class="stat-value">%92</div>
+          <div class="stat-sub">110 / 120 daire</div>
+          <div class="stat-delta delta-up">↑ %3 geçen aya göre</div>
+        </div>
+      </div>
+      <div class="card stat-card">
+        <div class="card-content">
+          <div class="stat-label">Aktif Arıza <span class="stat-icon-wrap">🔧</span></div>
+          <div class="stat-value">4</div>
+          <div class="stat-sub">2 bekleyen, 2 devam</div>
+          <div class="stat-delta delta-down">↑ 1 yeni bu hafta</div>
+        </div>
+      </div>
+      <div class="card stat-card">
+        <div class="card-content">
+          <div class="stat-label">Reklam Geliri <span class="stat-icon-wrap">📣</span></div>
+          <div class="stat-value">₺3.600</div>
+          <div class="stat-sub">Site fonuna eklendi</div>
+          <div class="stat-delta delta-up">↑ %22 geçen aya göre</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TWO-COL -->
+    <div class="two-col">
+
+      <!-- TABLE + CHART -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Table card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Aidat Durumu</div>
+              <div class="card-description">Mart 2026 · 120 daire</div>
+            </div>
+            <div class="tabs-list">
+              <button class="tabs-trigger active">Tümü</button>
+              <button class="tabs-trigger">Bekleyen</button>
+              <button class="tabs-trigger">Gecikmeli</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sakin</th>
+                  <th>Daire</th>
+                  <th>Tutar</th>
+                  <th>Son Ödeme</th>
+                  <th>Durum</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="flex-center gap-2">
+                      <div class="avatar avatar-md av-blue">EY</div>
+                      <div>
+                        <div style="font-weight:500;">Emre Yıldız</div>
+                        <div style="font-size:12px;color:var(--muted-foreground);">emre@mail.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="color:var(--muted-foreground);">A-501</td>
+                  <td style="font-weight:600;">₺380</td>
+                  <td style="font-size:12px;color:var(--muted-foreground);">1 Nis 2026</td>
+                  <td><span class="badge badge-success">Ödendi</span></td>
+                  <td><button class="btn btn-ghost btn-sm" style="color:var(--muted-foreground);font-size:12px;">Detay</button></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex-center gap-2">
+                      <div class="avatar avatar-md av-orange">FA</div>
+                      <div>
+                        <div style="font-weight:500;">Fatma Arslan</div>
+                        <div style="font-size:12px;color:var(--muted-foreground);">fatma@mail.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="color:var(--muted-foreground);">B-102</td>
+                  <td style="font-weight:600;">₺380</td>
+                  <td style="font-size:12px;color:var(--destructive);font-weight:500;">25 Mar 2026</td>
+                  <td><span class="badge badge-destructive">Gecikmeli</span></td>
+                  <td><button class="btn btn-ghost btn-sm" style="color:var(--primary);font-size:12px;">Hatırlat</button></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex-center gap-2">
+                      <div class="avatar avatar-md av-purple">MŞ</div>
+                      <div>
+                        <div style="font-weight:500;">Mustafa Şahin</div>
+                        <div style="font-size:12px;color:var(--muted-foreground);">mustafa@mail.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="color:var(--muted-foreground);">A-304</td>
+                  <td style="font-weight:600;">₺380</td>
+                  <td style="font-size:12px;color:var(--muted-foreground);">28 Mar 2026</td>
+                  <td><span class="badge badge-warning">Bekliyor</span></td>
+                  <td><button class="btn btn-ghost btn-sm" style="color:var(--primary);font-size:12px;">Hatırlat</button></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex-center gap-2">
+                      <div class="avatar avatar-md av-green">ZK</div>
+                      <div>
+                        <div style="font-weight:500;">Zeynep Kara</div>
+                        <div style="font-size:12px;color:var(--muted-foreground);">zeynep@mail.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="color:var(--muted-foreground);">C-206</td>
+                  <td style="font-weight:600;">₺380</td>
+                  <td style="font-size:12px;color:var(--muted-foreground);">1 Nis 2026</td>
+                  <td><span class="badge badge-success">Ödendi</span></td>
+                  <td><button class="btn btn-ghost btn-sm" style="color:var(--muted-foreground);font-size:12px;">Detay</button></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex-center gap-2">
+                      <div class="avatar avatar-md av-pink">HA</div>
+                      <div>
+                        <div style="font-weight:500;">Hasan Aydın</div>
+                        <div style="font-size:12px;color:var(--muted-foreground);">hasan@mail.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="color:var(--muted-foreground);">A-112</td>
+                  <td style="font-weight:600;">₺380</td>
+                  <td style="font-size:12px;color:var(--destructive);font-weight:500;">20 Mar 2026</td>
+                  <td><span class="badge badge-destructive">Gecikmeli</span></td>
+                  <td><button class="btn btn-ghost btn-sm" style="color:var(--primary);font-size:12px;">Hatırlat</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer">
+            <span style="font-size:12px;color:var(--muted-foreground);margin-right:auto;">110 ödendi · 6 bekliyor · 4 gecikmeli</span>
+            <button class="btn btn-outline btn-sm">Tümünü Gör</button>
+            <button class="btn btn-default btn-sm">Toplu Hatırlat</button>
+          </div>
+        </div>
+
+        <!-- Chart card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Aylık Tahsilat</div>
+              <div class="card-description">Son 6 ay</div>
+            </div>
+            <select class="select">
+              <option>Son 6 Ay</option>
+              <option>Son 12 Ay</option>
+            </select>
+          </div>
+          <div class="card-content">
+            <div class="flex-between" style="margin-bottom:12px;">
+              <div>
+                <div style="font-size:22px;font-weight:800;">₺42.800</div>
+                <div style="font-size:12px;color:var(--muted-foreground);">Bu ay tahsilat</div>
+              </div>
+              <span class="badge badge-success">↑ %8</span>
+            </div>
+            <div class="mini-chart">
+              <div class="mc-bar" style="height:50%;"></div>
+              <div class="mc-bar" style="height:65%;"></div>
+              <div class="mc-bar" style="height:55%;"></div>
+              <div class="mc-bar" style="height:78%;"></div>
+              <div class="mc-bar" style="height:88%;"></div>
+              <div class="mc-bar active" style="height:100%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:11px;color:var(--muted-foreground);">Eki</span>
+              <span style="font-size:11px;color:var(--muted-foreground);">Kas</span>
+              <span style="font-size:11px;color:var(--muted-foreground);">Ara</span>
+              <span style="font-size:11px;color:var(--muted-foreground);">Oca</span>
+              <span style="font-size:11px;color:var(--muted-foreground);">Şub</span>
+              <span style="font-size:11px;color:var(--foreground);font-weight:600;">Mar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COL -->
+      <div class="side-col">
+
+        <!-- Ads -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Aktif Reklamlar</div>
+              <div class="card-description">Bu ay: <strong>₺3.600</strong></div>
+            </div>
+            <button class="btn btn-outline btn-sm">Yönet</button>
+          </div>
+          <div class="card-content" style="padding:8px 16px;">
+            <div class="ads-entry">
+              <div class="ads-dot" style="background:#f59e0b;"></div>
+              <div class="ads-info"><div class="ads-name">Pizza Trabzon</div><div class="ads-days">12 gün kaldı</div></div>
+              <div class="ads-amount">₺840</div>
+            </div>
+            <div class="ads-entry">
+              <div class="ads-dot" style="background:#22c55e;"></div>
+              <div class="ads-info"><div class="ads-name">Kuru Temizleme Arı</div><div class="ads-days">28 gün kaldı</div></div>
+              <div class="ads-amount">₺1.200</div>
+            </div>
+            <div class="ads-entry">
+              <div class="ads-dot" style="background:#3b82f6;"></div>
+              <div class="ads-info"><div class="ads-name">Dr. Mehmet Klinik</div><div class="ads-days">4 gün kaldı</div></div>
+              <div class="ads-amount">₺600</div>
+            </div>
+            <div class="ads-entry">
+              <div class="ads-dot" style="background:#8b5cf6;"></div>
+              <div class="ads-info"><div class="ads-name">Oto Yıkama Hızlı</div><div class="ads-days">10 gün kaldı</div></div>
+              <div class="ads-amount">₺960</div>
+            </div>
+          </div>
+          <div class="card-footer" style="justify-content:space-between;">
+            <span style="font-size:12px;color:var(--muted-foreground);">Site fonu: <strong style="color:var(--foreground);">₺2.520</strong></span>
+            <button class="btn btn-default btn-sm">+ Reklam Ekle</button>
+          </div>
+        </div>
+
+        <!-- Activity -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Son Aktiviteler</div>
+            <button class="btn btn-ghost btn-sm" style="color:var(--muted-foreground);font-size:12px;">Tümü →</button>
+          </div>
+          <div class="card-content" style="padding:8px 16px;">
+            <div class="activity-item">
+              <div class="activity-icon">💳</div>
+              <div class="activity-body">
+                <div class="activity-title">Emre Yıldız ödeme yaptı</div>
+                <div class="activity-desc">A-501 · ₺380 Mart aidatı</div>
+              </div>
+              <div class="activity-time">2 dk</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">🔧</div>
+              <div class="activity-body">
+                <div class="activity-title">Yeni arıza bildirimi</div>
+                <div class="activity-desc">B-208 — Asansör arızası</div>
+              </div>
+              <div class="activity-time">18 dk</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">📣</div>
+              <div class="activity-body">
+                <div class="activity-title">Yeni reklam başladı</div>
+                <div class="activity-desc">Pizza Trabzon · 30 gün</div>
+              </div>
+              <div class="activity-time">2 sa</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">📢</div>
+              <div class="activity-body">
+                <div class="activity-title">Duyuru yayınlandı</div>
+                <div class="activity-desc">Su kesintisi — 29 Mart</div>
+              </div>
+              <div class="activity-time">1 gün</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Hızlı İşlemler</div></div>
+          <div class="card-content" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;">
+            <button class="btn btn-outline" style="height:auto;flex-direction:column;gap:6px;padding:12px 8px;">
+              <span style="font-size:18px;">📢</span>
+              <span style="font-size:12px;">Duyuru</span>
+            </button>
+            <button class="btn btn-outline" style="height:auto;flex-direction:column;gap:6px;padding:12px 8px;">
+              <span style="font-size:18px;">💳</span>
+              <span style="font-size:12px;">Aidat Gönder</span>
+            </button>
+            <button class="btn btn-outline" style="height:auto;flex-direction:column;gap:6px;padding:12px 8px;">
+              <span style="font-size:18px;">📊</span>
+              <span style="font-size:12px;">Rapor İndir</span>
+            </button>
+            <button class="btn btn-outline" style="height:auto;flex-direction:column;gap:6px;padding:12px 8px;">
+              <span style="font-size:18px;">👤</span>
+              <span style="font-size:12px;">Sakin Ekle</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

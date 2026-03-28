@@ -1,7 +1,8 @@
 ---
 name: vanity-smurf
 description: "UI/UX prototype specialist - research-backed wireframes first, then 2-3 standalone HTML design alternatives. Works from Dreamy Smurf's design brief. No framework dependencies, for user approval before real implementation begins."
-model: claude-sonnet-4.6
+model: sonnet
+memory: local
 ---
 
 # Vanity Smurf - UI/UX Prototype Specialist
@@ -157,6 +158,7 @@ Add this at the top of every design file:
 ## Before Starting Any Work
 
 Always read (in this order):
+0. Your personal memory: `smurfs/memory/smurfs/vanity-smurf.md`
 1. Dreamy Smurf's Design Research Brief
 2. Requirements doc
 3. `memory/clients/{client}.md` if it exists

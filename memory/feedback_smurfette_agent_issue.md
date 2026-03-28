@@ -1,33 +1,49 @@
 ---
-name: Smurfette Agent Model Issue
-description: subagent_type smurfette fails to launch - workaround is to run pipeline directly via Bash
+name: Agent Dispatch Model Pattern
+description: Custom agent dispatch — model field goes in frontmatter (docs-compliant), AND must also be passed explicitly in every Agent tool call as belt-and-suspenders
 type: feedback
 ---
 
-**Rule:** Do NOT dispatch `subagent_type: smurfette` — it fails immediately with a model error. Run the image generator pipeline directly with Bash instead.
+**Rule:** Tüm agent frontmatter dosyaları `model: sonnet/opus/haiku` içermeli (docs'a uygun). Buna EK OLARAK, her Agent tool call'da `model:` parametresi explicit geçilmeli.
 
-**Why:** The smurfette agent (`.claude/agents/smurfette.md`) uses `model: claude-sonnet-4.6` matching all other agents, but the Agent tool cannot instantiate it. Error: "There's an issue with the selected model (claude-sonnet-4.6). It may not exist or you may not have access to it." Tried multiple times, always fails.
+**Why:** Docs'a göre resolution order: (1) env var → (2) per-invocation model → (3) frontmatter → (4) inherit. Frontmatter tek başına kullanıldığında bazı Claude Code sürümlerinde `sonnet` shorthand yanlış ID'ye expand edilebiliyor. Tool call'daki per-invocation değer frontmatter'ı override ettiğinden, ikisini birlikte kullanmak hem dokümana uygun hem hata-toleranslı.
 
-**How to apply:** When the user asks for image generation (any occasion, any client), skip the Smurfette agent dispatch entirely. Instead:
+**Correct pattern — her dispatch:**
+```
+Agent tool:
+  subagent_type: "dreamy-smurf"
+  model: "sonnet"    ← her dispatch'de belirt (frontmatter'a ek güvenlik katmanı)
+  prompt: "..."
+```
 
-1. Craft the prompt directly (Papa Smurf writes it inline)
-2. Run via Bash:
+**Sirin → Model Tablosu:**
+| Sirin | Model |
+|-------|-------|
+| dreamy-smurf | opus |
+| papa-smurf | opus |
+| brainy-smurf (normal) | sonnet |
+| brainy-smurf (UAT/E2E) | opus |
+| vanity-smurf | sonnet |
+| painter-smurf | sonnet |
+| handy-smurf | sonnet |
+| poet-smurf | sonnet |
+| hefty-smurf | haiku |
+| clumsy-smurf | sonnet |
+| smurfette | sonnet |
+
+**Smurfette image pipeline fallback:**
 ```bash
-cd /Users/ckansiz/workspace/smurfs/tools/image-generator
-.venv/bin/python - <<'EOF'
-import sys, os
-sys.path.insert(0, '.')
-from dotenv import load_dotenv
-load_dotenv('.env')
+cd /Users/ckansiz/workspace/smurfs
+tools/image-generator/.venv/bin/python - <<'EOF'
+import sys
+sys.path.insert(0, 'tools/image-generator')
 from smurfs.image_smurf import generate_with_dalle
-
 filepath = generate_with_dalle(
     positive_prompt="...",
     negative_prompt="...",
-    platform="story",  # or "feed", "banner", "og"
-    overlay_text="..."  # Turkish text to overlay, or "" for logo-only
+    platform="story",  # story | feed | banner | og
+    overlay_text=""
 )
-print(os.path.abspath(filepath))
+print(filepath)
 EOF
 ```
-3. Read the output file to show the user the result
