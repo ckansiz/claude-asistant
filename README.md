@@ -31,6 +31,7 @@ smurfs/ (Central Brain)                Project (.claude/)
 | Hefty Smurf | `hefty-smurf.md` | claude-haiku-4.6 | Scaffolding, project setup, sync-push | Yes |
 | Dreamy Smurf | `dreamy-smurf.md` | claude-sonnet-4.6 | Tech research, best practices, stack decisions | **No (read-only)** |
 | Clumsy Smurf | `clumsy-smurf.md` | claude-sonnet-4.6 | Mobile apps (React Native/Expo/Flutter - stack TBD) | Yes |
+| Smurfette | `smurfette.md` | claude-sonnet-4.6 | AI image generation — special day visuals, social media, branding (Wesoco) | Yes |
 
 ## SDLC Pipeline
 
@@ -51,16 +52,35 @@ Phase 3: Development
 
 At every CHECKPOINT: stop, present clearly, wait for explicit approval before continuing.
 
+## Tools
+
+### Image Generator (`tools/image-generator/`)
+
+Wesoco dijital ajans için özel gün görseli üretim pipeline'ı. Smurfette tarafından yönetilir.
+
+- DALL-E 3 / FLUX 1.1 Pro / Stability AI desteği
+- Otomatik metin overlay + logo compositing (Pillow + cairosvg)
+- Logo rengi arkaplan parlaklığına göre otomatik seçilir (koyu bg → beyaz logo)
+- `.env` dosyasında API key'ler tanımlanır
+- Sistem bağımlılığı: `brew install cairo`
+
+```bash
+# Manuel çalıştırma (interactive CLI):
+cd tools/image-generator
+python papa_smurf.py
+```
+
 ## Directory Structure
 
 ```
 smurfs/
 ├── CLAUDE.md                        # Papa Smurf orchestrator instructions
 ├── .claude/
-│   ├── agents/                      # 9 master smurf definitions
+│   ├── agents/                      # 10 master smurf definitions
 │   ├── rules/
 │   │   ├── workspace-map.md         # Project -> directory -> stack mapping
-│   │   └── delegation-rules.md      # Delegation rules + SDLC pipeline
+│   │   ├── delegation-rules.md      # Delegation rules + SDLC pipeline
+│   │   └── village-health.md        # Self-maintenance triggers + checklists
 │   └── settings.local.json
 ├── memory/
 │   ├── patterns/                    # Stack-based learnings
@@ -164,9 +184,12 @@ sync-push.sh -> updated knowledge distributed to all projects
 
 ## Adding a New Smurf
 
-1. Create a new `.md` file under `smurfs/.claude/agents/`
-2. Define `name`, `description`, `model` in YAML frontmatter
-3. Use `disallowedTools` to restrict permissions (disable Write/Edit for review agents)
-4. Add to delegation rules in `CLAUDE.md`
-5. Add chain rule to `delegation-rules.md`
-6. Deploy to projects with `sync-push.sh`
+1. Create `.claude/agents/{name}.md` with `name`, `description`, `model` frontmatter
+2. Use `disallowedTools` to restrict permissions (disable Write/Edit for review-only agents)
+3. Add to **CLAUDE.md** Delegation Rules section
+4. Add to **README.md** agent table ← this file
+5. Add chain/parallel dispatch rule to `.claude/rules/delegation-rules.md`
+6. Add pointer to global `MEMORY.md`
+7. Deploy to projects with `sync-push.sh`
+
+> **Rule:** A smurf is not "added" until all 7 steps are done. README accuracy is non-negotiable.

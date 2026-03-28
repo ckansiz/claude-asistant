@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from config import OPENAI_API_KEY, REPLICATE_API_TOKEN, STABILITY_API_KEY, FORMATS, OUTPUT_DIR
 
 
-def generate_with_dalle(positive_prompt: str, negative_prompt: str, platform: str) -> str:
+def generate_with_dalle(positive_prompt: str, negative_prompt: str, platform: str, overlay_text: str = "") -> str:
     """DALL-E 3 ile gorsel uretir. Dondurur: dosya yolu"""
     from openai import OpenAI
     client = OpenAI(api_key=OPENAI_API_KEY)
@@ -33,10 +33,16 @@ def generate_with_dalle(positive_prompt: str, negative_prompt: str, platform: st
     )
 
     image_url = response.data[0].url
-    return _download_and_save(image_url, platform, "dalle")
+    filepath = _download_and_save(image_url, platform, "dalle")
+
+    if overlay_text or True:  # logo her zaman eklenir
+        from smurfs.compositor_smurf import finalize_image
+        filepath = finalize_image(filepath, overlay_text, platform)
+
+    return filepath
 
 
-def generate_with_flux(positive_prompt: str, negative_prompt: str, platform: str) -> str:
+def generate_with_flux(positive_prompt: str, negative_prompt: str, platform: str, overlay_text: str = "") -> str:
     """Replicate FLUX 1.1 Pro ile gorsel uretir."""
     import replicate
 
@@ -61,10 +67,13 @@ def generate_with_flux(positive_prompt: str, negative_prompt: str, platform: str
     )
 
     image_url = str(output)
-    return _download_and_save(image_url, platform, "flux")
+    filepath = _download_and_save(image_url, platform, "flux")
+
+    from smurfs.compositor_smurf import finalize_image
+    return finalize_image(filepath, overlay_text, platform)
 
 
-def generate_with_stability(positive_prompt: str, negative_prompt: str, platform: str) -> str:
+def generate_with_stability(positive_prompt: str, negative_prompt: str, platform: str, overlay_text: str = "") -> str:
     """Stability AI Stable Image Core ile gorsel uretir."""
     aspect_map = {
         "feed": "1:1",
@@ -99,7 +108,8 @@ def generate_with_stability(positive_prompt: str, negative_prompt: str, platform
     with open(filepath, "wb") as f:
         f.write(response.content)
 
-    return filepath
+    from smurfs.compositor_smurf import finalize_image
+    return finalize_image(filepath, overlay_text, platform)
 
 
 def _download_and_save(url: str, platform: str, provider: str) -> str:

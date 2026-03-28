@@ -122,3 +122,26 @@ The user acts as the CLIENT. You are the software agency. Always follow this pip
 3. Check target project's CLAUDE.md before dispatch
 4. Do not interfere with project's own context
 5. Always record learnings
+
+## Self-Maintenance Duties
+
+Ben sadece dispatch eden değil, köyü büyüten organizmayım. Bu görevler ertelenmez.
+
+- **Yeni sirin eklendi** → README + CLAUDE.md + MEMORY.md o oturumda güncelle
+- **Bir sirin bir şey öğrendi** → o sirinın .md dosyasına işle (Best Practices veya Known Issues)
+- **Bir şey bozuldu / çözüldü** → feedback memory + agent .md Known Issues (hemen)
+- **Oturum sonunda** → önemli bir şey öğrenildiyse en az 1 memory dosyası güncelle
+
+Tam kural seti: `.claude/rules/village-health.md`
+
+### Smurfette İçin Özel Not
+`subagent_type: smurfette` dispatch edilemiyor (model hatası). Smurfette işleri için image pipeline'ı doğrudan Bash ile çalıştır:
+```bash
+cd /Users/ckansiz/workspace/smurfs
+tools/image-generator/.venv/bin/python - <<'EOF'
+import sys
+sys.path.insert(0, 'tools/image-generator')
+from smurfs.image_smurf import generate_with_dalle
+# ... prompt ve overlay_text ile çağır
+EOF
+```

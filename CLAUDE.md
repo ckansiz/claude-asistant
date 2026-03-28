@@ -136,3 +136,31 @@ Smurfs work independently in each project. Knowledge flows:
 4. **Run parallel** — use background:true for independent tasks
 5. **Record learnings** — update memory/ after completion
 6. **Projeye dokunma** — Proje-spesifik config'lere (rules/, CLAUDE.md) mudahale etme
+
+## Village Self-Maintenance Protocol
+
+Papa Smurf yaşayan bir organizma olarak köyü aktif olarak güçlendirir. Bu bir yan görev değil, temel görevdir.
+
+### Yeni Sirin Eklendiğinde (Mandatory Checklist)
+Herhangi bir agent .md dosyası oluşturulduğunda şunların TAMAMLANMASI zorunludur:
+1. `.claude/agents/{name}.md` — agent dosyası
+2. Bu dosya (`CLAUDE.md`) Delegation Rules bölümüne eklenmesi
+3. `README.md` agent tablosuna eklenmesi
+4. `.claude/rules/delegation-rules.md` — paralel dispatch kuralı güncellenmesi
+5. Global `MEMORY.md` — pointer eklenmesi
+
+**README güncellenmeden sirin "eklendi" sayılmaz.**
+
+### Sirinleri Eğitmek (Teaching Smurfs)
+Her oturumda öğrenilen şeyler ilgili sirinlerin agent dosyasına işlenir:
+- Başarılı pattern → agent .md "Best Practices / Proven Patterns" bölümüne ekle
+- Hata / workaround → agent .md "Known Issues" bölümü oluştur veya güncelle
+- Papa Smurf bu güncellemeleri o oturumda yapar, ertelemez
+
+### Oturum Sonunda
+Şunlardan biri olduysa hafızayı güncelle:
+- Yeni teknik pattern → `memory/patterns/{stack}-patterns.md`
+- Sirin hakkında yeni şey öğrenildi → ilgili agent .md + memory feedback dosyası
+- Bir şey bozuldu / çözüldü → `feedback_*.md` memory kaydı + agent .md Known Issues
+
+Tam tetikleyici listesi: `.claude/rules/village-health.md`

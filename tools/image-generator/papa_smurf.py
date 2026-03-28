@@ -83,14 +83,18 @@ def main():
 
     extra = ask("Extra context? (brand colors, tone, style - can leave empty):")
 
-    # 2. Platform
+    # 2. Overlay text
+    print_step("*", "Text Overlay", "Gorusel uzerine yazilacak metin (bos birakabilirsin):")
+    overlay_text = ask("Metin (orn: 14 Subat Sevgililer Gununuz Kutlu Olsun):")
+
+    # 3. Platform
     platforms = ask_platform()
 
-    # 3. API selection
+    # 4. API selection
     api_key = ask_api(apis)
     api_name = apis[api_key]
 
-    # 4. Prompt generation
+    # 5. Prompt generation
     results = []
     for platform in platforms:
         platform_label = FORMATS[platform]["label"]
@@ -111,7 +115,7 @@ def main():
             print(f"   ERROR: Prompt generation failed: {e}")
             continue
 
-        # 5. Image generation
+        # 6. Image generation + compositing
         print_step(">", f"Generating image...", f"{api_name} - please wait...")
 
         try:
@@ -119,7 +123,8 @@ def main():
             filepath = generator(
                 positive_prompt=prompt_data["positive_prompt"],
                 negative_prompt=prompt_data.get("negative_prompt", ""),
-                platform=platform
+                platform=platform,
+                overlay_text=overlay_text,
             )
             results.append((platform_label, filepath))
             print(f"   Image ready!")
