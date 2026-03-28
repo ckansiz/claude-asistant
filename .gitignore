@@ -8,3 +8,4 @@ node_modules/
 tools/image-generator/outputs/
 __pycache__/
 *.pyc
+tools/image-generator/sample
