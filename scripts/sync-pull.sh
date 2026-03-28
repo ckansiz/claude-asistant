@@ -1,5 +1,5 @@
 #!/bin/bash
-# sync-pull.sh — Pull project learnings back to central Sirin Koyu brain
+# sync-pull.sh — Pull project learnings back to central Smurf Village brain
 # Usage: ./scripts/sync-pull.sh <target-project-path>
 #        ./scripts/sync-pull.sh --all   (scans all known projects)
 
@@ -47,7 +47,7 @@ pull_from_project() {
     rm -f "$temp_file"
 }
 
-echo "=== Sirin Koyu Sync Pull ==="
+echo "=== Smurf Village Sync Pull ==="
 
 # Initialize cross-project-learnings if it doesn't exist
 if [ ! -f "$SMURFS_DIR/memory/patterns/cross-project-learnings.md" ]; then

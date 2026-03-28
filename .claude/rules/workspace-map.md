@@ -28,7 +28,7 @@ When user mentions a client name, map to: `~/workspace/wesoco/works/{slug}/`
 | Wesoco UC | wesoco-uc | - |
 | Wesoco Website | wesoco-website | - |
 
-Note: Stacks marked with `-` need to be verified on first use. Have Cirak Sirin check and create CLAUDE.md.
+Note: Stacks marked with `-` need to be verified on first use. Have Hefty Smurf check and create CLAUDE.md.
 
 ## Keyword -> Project Path
 

@@ -14,7 +14,7 @@ TARGET_DIR="$(cd "$TARGET_DIR" 2>/dev/null && pwd)" || {
     exit 1
 }
 
-echo "=== Sirin Koyu Sync Push ==="
+echo "=== Smurf Village Sync Push ==="
 echo "Source: $SMURFS_DIR"
 echo "Target: $TARGET_DIR"
 echo ""
@@ -33,7 +33,7 @@ mkdir -p "$TARGET_DIR/.claude/rules"
 # Create/update shared-patterns.md (this file is managed by sync, safe to overwrite)
 echo "Merging shared patterns..."
 SHARED_PATTERNS="$TARGET_DIR/.claude/rules/shared-patterns.md"
-echo "# Shared Patterns (auto-synced from Sirin Koyu)" > "$SHARED_PATTERNS"
+echo "# Shared Patterns (auto-synced from Smurf Village)" > "$SHARED_PATTERNS"
 echo "# Last sync: $(date -u '+%Y-%m-%d %H:%M UTC')" >> "$SHARED_PATTERNS"
 echo "" >> "$SHARED_PATTERNS"
 
@@ -57,7 +57,7 @@ if [ ! -f "$TARGET_DIR/.claude/project-learnings.md" ]; then
     echo "# Project Learnings" > "$TARGET_DIR/.claude/project-learnings.md"
     echo "" >> "$TARGET_DIR/.claude/project-learnings.md"
     echo "Findings from smurf agents working in this project." >> "$TARGET_DIR/.claude/project-learnings.md"
-    echo "This file is periodically synced back to the central Sirin Koyu brain." >> "$TARGET_DIR/.claude/project-learnings.md"
+    echo "This file is periodically synced back to the central Smurf Village brain." >> "$TARGET_DIR/.claude/project-learnings.md"
     echo "" >> "$TARGET_DIR/.claude/project-learnings.md"
     echo "---" >> "$TARGET_DIR/.claude/project-learnings.md"
     echo "" >> "$TARGET_DIR/.claude/project-learnings.md"
@@ -66,7 +66,7 @@ fi
 
 # 5. Summary
 echo ""
-echo "=== Sync Push Complete ==="
+echo "=== Smurf Village Sync Push Complete ==="
 echo "Agents deployed. Project-specific files (rules/, CLAUDE.md) were NOT modified."
 echo ""
 echo "Files in $TARGET_DIR/.claude/agents/:"

@@ -1,7 +1,7 @@
 # Astro Patterns
 
 Learned patterns from working across Astro projects.
-This file is updated by Sirin Baba after significant work.
+This file is updated by Papa Smurf after significant work.
 
 ---
 
