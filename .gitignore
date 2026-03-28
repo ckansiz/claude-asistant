@@ -5,3 +5,6 @@ node_modules/
 .DS_Store
 *.log
 .claude/settings.local.json
+tools/image-generator/outputs/
+__pycache__/
+*.pyc

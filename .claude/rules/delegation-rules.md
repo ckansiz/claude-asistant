@@ -34,11 +34,15 @@ Phase 3: Development
 3. **Unknown approach** → Dreamy Smurf → (implementation smurf)
 4. **Mobile work** → Dreamy Smurf (stack decision first) → Clumsy Smurf → Brainy Smurf
 5. **Backend + Frontend together** → Handy + Painter (parallel) → Brainy (review both)
+6. **Image/visual asset needed** → Smurfette (can run parallel with Painter or Handy)
+7. **Client social media content** → Smurfette (standalone, no review needed for generated images)
 
 ## Parallel Dispatch (use background: true)
 
 These combinations are safe to run in parallel:
 - Painter (frontend) + Handy (backend) — independent work areas
+- Painter (frontend) + Smurfette (images) — UI code + visual assets simultaneously
+- Smurfette (images) + Handy (backend) — assets + API work simultaneously
 - Poet (spec) + Dreamy (research) — if research topics are known upfront
 - Dreamy (research) + Hefty (scaffold) — if tasks don't depend on each other
 - Multiple Painter dispatches to DIFFERENT projects — batch updates across clients

@@ -61,6 +61,13 @@ wesoco-uc, wesoco-website
 - Stack selection, library comparison, open questions from tech-spec.
 - READ-ONLY — researches and reports, does NOT write code.
 
+### Smurfette (@smurfette)
+**WHEN:** AI image generation — social media visuals, banners, hero images, logos, marketing graphics
+- Prompt engineering (Turkish → English) + image generation via DALL-E 3, FLUX, Stability AI
+- Formats: Feed (1:1), Story (9:16), Banner (16:9), OG (1.91:1)
+- Tool: `tools/image-generator/`
+- Can work in parallel with Painter (images for UI) or independently
+
 ### Clumsy Smurf (@clumsy-smurf)
 **WHEN:** Mobile app development (iOS + Android)
 - React Native / Expo / Flutter — stack decided by Dreamy Smurf per project
