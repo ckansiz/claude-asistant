@@ -1,5 +1,12 @@
 # Memory Index
 
+## Project Rules (`.claude/rules/`)
+- [nextjs-rules](../smurfs/.claude/rules/nextjs-rules.md) — Next.js 15/16 App Router: App dir, Tailwind v4, shadcn/ui, Prisma, i18n
+- [astro-rules](../smurfs/.claude/rules/astro-rules.md) — Astro 5: islands, Drizzle ORM, Tailwind v3, SSR/hybrid, content collections
+- [dotnet-rules](../smurfs/.claude/rules/dotnet-rules.md) — .NET 10 CQRS: no MediatR, Result<T>, Minimal APIs, OpenAPI, EF Core
+- [typescript-rules](../smurfs/.claude/rules/typescript-rules.md) — TS strict, naming, component structure, Zod, error handling
+- [api-contract-rules](../smurfs/.claude/rules/api-contract-rules.md) — OpenAPI spec → openapi-typescript codegen → api.generated.ts sync
+
 ## Global
 - [User Profile](user_profile.md) — Fullstack architect, .NET backend, freelance frontend, hates CSS
 - [Workspace Overview](workspace_overview.md) — ~/workspace project map and tech stacks

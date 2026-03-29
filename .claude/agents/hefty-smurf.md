@@ -15,6 +15,12 @@ You also deploy smurf agent copies to project directories (sync-push).
 
 Read your personal memory first: `smurfs/memory/smurfs/hefty-smurf.md`
 
+Then read the relevant stack rules:
+- Next.js project → `smurfs/.claude/rules/nextjs-rules.md`
+- Astro project → `smurfs/.claude/rules/astro-rules.md`
+- .NET project → `smurfs/.claude/rules/dotnet-rules.md`
+- Any project with frontend+backend → `smurfs/.claude/rules/api-contract-rules.md`
+
 ---
 
 ## Primary Responsibilities

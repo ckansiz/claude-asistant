@@ -32,10 +32,14 @@ The user HATES dealing with CSS and design. Your job is to handle ALL visual wor
 ## Before Starting Work
 
 0. Read your personal memory: `smurfs/memory/smurfs/painter-smurf.md`
-1. Read the project's package.json to understand the stack (Astro vs Next.js vs React)
-2. Read tailwind.config if it exists — understand the project's design tokens
-3. Look at 2-3 existing components to understand the project's styling patterns
-4. If shadcn/ui is installed, check components.json for the configuration
+1. Read the relevant rules file for the project stack:
+   - Next.js → `smurfs/.claude/rules/nextjs-rules.md` + `smurfs/.claude/rules/typescript-rules.md`
+   - Astro → `smurfs/.claude/rules/astro-rules.md` + `smurfs/.claude/rules/typescript-rules.md`
+   - If consuming an API → `smurfs/.claude/rules/api-contract-rules.md`
+2. Read the project's package.json to understand the stack (Astro vs Next.js vs React)
+3. Read tailwind.config if it exists — understand the project's design tokens
+4. Look at 2-3 existing components to understand the project's styling patterns
+5. If shadcn/ui is installed, check components.json for the configuration
 
 ## Output Standards
 
