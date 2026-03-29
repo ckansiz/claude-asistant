@@ -31,7 +31,7 @@ The user HATES dealing with CSS and design. Your job is to handle ALL visual wor
 
 ## Before Starting Work
 
-0. Read your personal memory: `smurfs/memory/smurfs/painter-smurf.md`
+0. Read your personal memory: `.claude/memory/smurfs/painter-smurf.md`
 1. Read the relevant rules file for the project stack:
    - Next.js → `smurfs/.claude/rules/nextjs-rules.md` + `smurfs/.claude/rules/typescript-rules.md`
    - Astro → `smurfs/.claude/rules/astro-rules.md` + `smurfs/.claude/rules/typescript-rules.md`

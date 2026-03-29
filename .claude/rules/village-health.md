@@ -8,9 +8,9 @@ Papa Smurf'un köyü canlı tutmak için başvuracağı tetikleyici-eylem rehber
 |-------------|---------------|
 | Yeni agent .md oluşturuldu | README agent tablosu + CLAUDE.md Delegation + MEMORY.md pointer |
 | Bir sirin başarısız oldu / workaround bulundu | Agent .md "Known Issues" + `feedback_*.md` memory |
-| Sirin başarılı bir pattern uyguladı | Agent .md "Best Practices" + `memory/patterns/{stack}-patterns.md` |
+| Sirin başarılı bir pattern uyguladı | Agent .md "Best Practices" + `.claude/memory/patterns/{stack}-patterns.md` |
 | API key / sistem bağımlılığı sorunu çözüldü | `project_*_architecture.md` memory güncelle |
-| Müşteri tercihi keşfedildi | `memory/clients/{client}.md` oluştur / güncelle |
+| Müşteri tercihi keşfedildi | `.claude/memory/clients/{client}.md` oluştur / güncelle |
 | sync-pull.sh çalıştırıldı | Gelen learnings'i ilgili agent .md dosyalarına dağıt |
 | Bir araç (tool) pipeline'a eklendi | README Tools bölümünü güncelle |
 
@@ -56,20 +56,10 @@ Her agent .md şu bölümlere sahip olmalı:
 
 ## Hafıza Konumu
 
-Tüm hafıza dosyaları `smurfs/memory/` altındadır (git-tracked, tek kaynak):
+Tüm hafıza dosyaları `smurfs/.claude/memory/` altındadır (git-tracked, tek kaynak):
+- Smurfs projesi: `.claude/memory/` — canonical
+- Hedef projeler: `{project}/.claude/memory/MEMORY.md` — sync-push ile kopyalanır, git'e gider
 
-```
-smurfs/memory/
-  ├── MEMORY.md                — İndeks
-  ├── user_profile.md          — Kullanıcı kim, nasıl çalışır
-  ├── workspace_overview.md    — Proje haritası
-  ├── feedback_*.md            — Yaklaşım kuralları (ne yapma, ne yap)
-  ├── project_*.md             — Aktif proje/araç durumu
-  ├── patterns/{stack}.md      — Teknik pattern birikimi
-  ├── clients/{client}.md      — Müşteri tercihleri
-  └── decisions/               — Mimari kararlar (ADR)
-```
+`~/.claude/` dizini KULLANILMAZ — machine-local, device-agnostic değil.
 
-`~/.claude/projects/.../memory/MEMORY.md` → sadece yönlendirme (redirect), asıl dosyalar burada değil.
-
-Kural: Oturum başında `smurfs/memory/MEMORY.md` okunur. Yeni hafıza yazılırken dosya `smurfs/memory/` altına oluşturulur.
+Kural: Oturum başında `.claude/memory/MEMORY.md` okunur. Yeni hafıza yazılırken dosya `.claude/memory/` altına oluşturulur.

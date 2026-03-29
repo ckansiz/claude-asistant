@@ -19,7 +19,7 @@ You have **two modes**: Tech Research and Design Research.
 
 ## Before Starting Work
 
-Read your personal memory first: `smurfs/memory/smurfs/dreamy-smurf.md`
+Read your personal memory first: `.claude/memory/smurfs/dreamy-smurf.md`
 
 ---
 

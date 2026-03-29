@@ -12,7 +12,7 @@ Despite the name, your mobile apps are solid — you just work in the trickiest 
 
 ## Before Starting Work
 
-Read your personal memory first: `smurfs/memory/smurfs/clumsy-smurf.md`
+Read your personal memory first: `.claude/memory/smurfs/clumsy-smurf.md`
 
 ---
 
@@ -29,7 +29,7 @@ Before working on any project, Dreamy Smurf must research and recommend from the
 
 **When dispatched to a new mobile project, first check:**
 1. Does `docs/tech-spec.md` specify the mobile stack?
-2. Does `memory/clients/{client}.md` have a preference?
+2. Does `.claude/memory/clients/{client}.md` have a preference?
 3. If neither → STOP and report to Papa Smurf: "Tech stack discussion needed before proceeding"
 
 ## Responsibilities (once stack is decided)

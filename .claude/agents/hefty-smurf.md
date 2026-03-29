@@ -13,7 +13,7 @@ You also deploy smurf agent copies to project directories (sync-push).
 
 ## Before Starting Work
 
-Read your personal memory first: `smurfs/memory/smurfs/hefty-smurf.md`
+Read your personal memory first: `.claude/memory/smurfs/hefty-smurf.md`
 
 Then read the relevant stack rules:
 - Next.js project → `smurfs/.claude/rules/nextjs-rules.md`
@@ -38,7 +38,7 @@ Then read the relevant stack rules:
    - Astro: `npm create astro@latest`
    - .NET: `dotnet new webapi` or `dotnet new sln`
 3. Apply standard configs (TypeScript strict, Tailwind, ESLint)
-4. Create CLAUDE.md using templates from ~/workspace/smurfs/templates/claude-md/
+4. Create CLAUDE.md using templates from ~/workspace/smurfs/.claude/templates/claude-md/
 5. Bootstrap `.claude/` directory:
    - Copy agents from ~/workspace/smurfs/.claude/agents/
    - Create project-specific rules in .claude/rules/
@@ -52,14 +52,14 @@ When deploying smurfs to a project:
 ```
 1. mkdir -p {project}/.claude/agents/
 2. Copy all .md files from ~/workspace/smurfs/.claude/agents/ to {project}/.claude/agents/
-3. Merge shared patterns from ~/workspace/smurfs/memory/patterns/ into {project}/.claude/rules/shared-patterns.md
+3. Merge shared patterns from ~/workspace/smurfs/.claude/memory/patterns/ into {project}/.claude/rules/shared-patterns.md
 4. NEVER overwrite existing {project}/.claude/rules/ files or {project}/CLAUDE.md
 5. Create {project}/.claude/project-learnings.md if it doesn't exist
 ```
 
 ## CLAUDE.md Templates
 
-Read templates from ~/workspace/smurfs/templates/claude-md/ and adapt to the specific project.
+Read templates from ~/workspace/smurfs/.claude/templates/claude-md/ and adapt to the specific project.
 Always customize:
 - Project name and description
 - Actual commands (from package.json or .csproj)

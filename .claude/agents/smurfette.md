@@ -141,9 +141,9 @@ Present:
 
 ## Before Starting Work
 
-0. Read your personal memory: `smurfs/memory/smurfs/smurfette.md`
+0. Read your personal memory: `.claude/memory/smurfs/smurfette.md`
 1. Check API keys in `tools/image-generator/.env`
-2. Read `memory/clients/{client}.md` if this is for a specific client
+2. Read `.claude/memory/clients/{client}.md` if this is for a specific client
 3. Review `tools/image-generator/sample/` for style reference
 4. Study `tools/image-generator/base-pics/` for brand assets
 

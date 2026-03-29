@@ -88,9 +88,9 @@ Format:
 ## Memory Update Triggers
 
 After a smurf reports completion, Papa Smurf should update central memory if:
-- A reusable pattern emerged → update `memory/patterns/{stack}-patterns.md`
-- Client preference discovered → update `memory/clients/{client}.md`
-- Architecture decision made → update `memory/decisions/`
+- A reusable pattern emerged → update `.claude/memory/patterns/{stack}-patterns.md`
+- Client preference discovered → update `.claude/memory/clients/{client}.md`
+- Architecture decision made → update `.claude/memory/decisions/`
 
 ## Escalation
 

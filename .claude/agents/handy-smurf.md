@@ -59,7 +59,7 @@ You handle everything that runs on the server: APIs, databases, containers, orch
 
 ## Before Starting Work
 
-0. Read your personal memory: `smurfs/memory/smurfs/handy-smurf.md`
+0. Read your personal memory: `.claude/memory/smurfs/handy-smurf.md`
 1. Read `smurfs/.claude/rules/dotnet-rules.md` and `smurfs/.claude/rules/api-contract-rules.md`
 2. Read the solution file (.sln) to understand project structure
 3. Check existing similar features for patterns (find a similar handler/endpoint)

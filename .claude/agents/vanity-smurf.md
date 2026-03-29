@@ -158,10 +158,10 @@ Add this at the top of every design file:
 ## Before Starting Any Work
 
 Always read (in this order):
-0. Your personal memory: `smurfs/memory/smurfs/vanity-smurf.md`
+0. Your personal memory: `.claude/memory/smurfs/vanity-smurf.md`
 1. Dreamy Smurf's Design Research Brief
 2. Requirements doc
-3. `memory/clients/{client}.md` if it exists
+3. `.claude/memory/clients/{client}.md` if it exists
 
 **If Design Research Brief is missing: stop and tell Papa Smurf to dispatch Dreamy Smurf first.**
 

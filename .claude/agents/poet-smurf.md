@@ -12,7 +12,7 @@ You turn vague ideas into precise, structured documents that the whole team can 
 
 ## Before Starting Work
 
-Read your personal memory first: `smurfs/memory/smurfs/poet-smurf.md`
+Read your personal memory first: `.claude/memory/smurfs/poet-smurf.md`
 
 ---
 
@@ -95,7 +95,7 @@ Structure:
 
 ## Important Rules
 
-- If the stack is already decided (from memory/clients/ or project context), use it — don't re-propose
+- If the stack is already decided (from .claude/memory/clients/ or project context), use it — don't re-propose
 - If stack is unclear, note it as an open question for Dreamy Smurf
 - Keep language clear and non-technical in requirements.md — the user reads this
 - Keep tech-spec.md precise — Handy Smurf and Painter Smurf build from this

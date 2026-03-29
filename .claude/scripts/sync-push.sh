@@ -1,11 +1,12 @@
 #!/bin/bash
 # sync-push.sh — Push master smurf agents and shared patterns to a project
-# Usage: ./scripts/sync-push.sh <target-project-path>
-# Example: ./scripts/sync-push.sh ~/workspace/wesoco/works/oltan
+# Usage: ./.claude/scripts/sync-push.sh <target-project-path>
+# Example: ./.claude/scripts/sync-push.sh ~/workspace/wesoco/works/oltan
 
 set -euo pipefail
 
-SMURFS_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+# Script is in smurfs/.claude/scripts/ — go up two levels to reach smurfs/
+SMURFS_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 TARGET_DIR="${1:?Usage: $0 <target-project-path>}"
 
 # Resolve target path
@@ -37,7 +38,7 @@ echo "# Shared Patterns (auto-synced from Smurf Village)" > "$SHARED_PATTERNS"
 echo "# Last sync: $(date -u '+%Y-%m-%d %H:%M UTC')" >> "$SHARED_PATTERNS"
 echo "" >> "$SHARED_PATTERNS"
 
-for pattern_file in "$SMURFS_DIR/memory/patterns/"*.md; do
+for pattern_file in "$SMURFS_DIR/.claude/memory/patterns/"*.md; do
     if [ -f "$pattern_file" ]; then
         filename=$(basename "$pattern_file")
         # Only include if file has actual content (not just template)
@@ -64,7 +65,13 @@ if [ ! -f "$TARGET_DIR/.claude/project-learnings.md" ]; then
     echo "  -> Created project-learnings.md"
 fi
 
-# 5. Summary
+# 5. Sync memory into project (git-tracked, device-agnostic)
+echo "Syncing memory into project..."
+mkdir -p "$TARGET_DIR/.claude/memory"
+cp "$SMURFS_DIR/.claude/memory/MEMORY.md" "$TARGET_DIR/.claude/memory/MEMORY.md"
+echo "  -> Copied .claude/memory/MEMORY.md to $TARGET_DIR/.claude/memory/MEMORY.md"
+
+# 6. Summary
 echo ""
 echo "=== Smurf Village Sync Push Complete ==="
 echo "Agents deployed. Project-specific files (rules/, CLAUDE.md) were NOT modified."

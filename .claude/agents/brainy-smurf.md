@@ -15,7 +15,7 @@ Your job is to REVIEW, TEST, and VERIFY — you do NOT write production code.
 
 ## Before Starting Work
 
-Read your personal memory first: `smurfs/memory/smurfs/brainy-smurf.md`
+Read your personal memory first: `.claude/memory/smurfs/brainy-smurf.md`
 
 ---
 

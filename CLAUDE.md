@@ -109,23 +109,24 @@ Phase 3: Development
 
 ## Memory Protocol
 
-**All memory lives in `smurfs/memory/` (git-tracked, single source of truth).**
-`~/.claude/projects/.../memory/` is only a redirect — do NOT write new files there.
+**All memory lives in `.claude/memory/` (git-tracked, single source of truth).**
+Target projects receive a copy at `{project}/.claude/memory/MEMORY.md` via sync-push.
+`~/.claude/` directory is NOT used — it is machine-local and not device-agnostic.
 
 ### Read (Before dispatch)
 Before dispatching to a smurf, read relevant memory files and include in dispatch prompt:
-- `memory/MEMORY.md` — full index
-- `memory/user_profile.md` — user preferences and stack decisions
-- `memory/feedback_*.md` — approach rules (e.g. shadcn/ui default)
-- `memory/patterns/{stack}-patterns.md` — technical patterns
-- `memory/clients/{client}.md` — client info
-- `memory/decisions/` — architecture decisions
+- `.claude/memory/MEMORY.md` — full index
+- `.claude/memory/user_profile.md` — user preferences and stack decisions
+- `.claude/memory/feedback_*.md` — approach rules (e.g. shadcn/ui default)
+- `.claude/memory/patterns/{stack}-patterns.md` — technical patterns
+- `.claude/memory/clients/{client}.md` — client info
+- `.claude/memory/decisions/` — architecture decisions
 
 ### Write (After completion)
 When significant work is completed:
-1. Save learned patterns to `memory/patterns/`
-2. Save client info to `memory/clients/`
-3. Save architecture decisions to `memory/decisions/`
+1. Save learned patterns to `.claude/memory/patterns/`
+2. Save client info to `.claude/memory/clients/`
+3. Save architecture decisions to `.claude/memory/decisions/`
 
 ## Sync Protocol (Federated Model)
 
@@ -133,7 +134,7 @@ Smurfs work independently in each project. Knowledge flows:
 
 ### Push (smurfs/ → project)
 ```bash
-./scripts/sync-push.sh ~/workspace/wesoco/works/{client}
+./.claude/scripts/sync-push.sh ~/workspace/wesoco/works/{client}
 ```
 - Copies master agent files to project's .claude/agents/
 - Merges central patterns to project's .claude/rules/shared-patterns.md
@@ -141,19 +142,19 @@ Smurfs work independently in each project. Knowledge flows:
 
 ### Pull (project → smurfs/)
 ```bash
-./scripts/sync-pull.sh ~/workspace/wesoco/works/{client}
+./.claude/scripts/sync-pull.sh ~/workspace/wesoco/works/{client}
 ```
 - Reads project's .claude/project-learnings.md
-- Appends content to central memory/patterns/
+- Appends content to central `.claude/memory/patterns/`
 - Marks project's learnings as "synced"
 
 ## Working Principles
 
 1. **Identify target directory** — determine the correct project directory for each task
 2. **Single project rule** — each dispatch targets exactly ONE project directory
-3. **Read context** — check memory/ and project's CLAUDE.md before dispatch
+3. **Read context** — check `.claude/memory/` and project's CLAUDE.md before dispatch
 4. **Run parallel** — use background:true for independent tasks
-5. **Record learnings** — update memory/ after completion
+5. **Record learnings** — update `.claude/memory/` after completion
 6. **Projeye dokunma** — Proje-spesifik config'lere (rules/, CLAUDE.md) mudahale etme
 
 ## Village Self-Maintenance Protocol
@@ -178,8 +179,8 @@ Her oturumda öğrenilen şeyler ilgili sirinlerin agent dosyasına işlenir:
 
 ### Oturum Sonunda
 Şunlardan biri olduysa hafızayı güncelle:
-- Yeni teknik pattern → `memory/patterns/{stack}-patterns.md`
-- Sirin hakkında yeni şey öğrenildi → ilgili agent .md + memory feedback dosyası
-- Bir şey bozuldu / çözüldü → `feedback_*.md` memory kaydı + agent .md Known Issues
+- Yeni teknik pattern → `.claude/memory/patterns/{stack}-patterns.md`
+- Sirin hakkında yeni şey öğrenildi → ilgili agent .md + `.claude/memory/feedback_*.md`
+- Bir şey bozuldu / çözüldü → `.claude/memory/feedback_*.md` kaydı + agent .md Known Issues
 
 Tam tetikleyici listesi: `.claude/rules/village-health.md`
