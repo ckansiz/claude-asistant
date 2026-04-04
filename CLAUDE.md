@@ -25,128 +25,39 @@ kkm-hendislik, kofteci-ekrem, ms-ako, oltan, ppf-web, profarkgarage.com.tr,
 qretna-app, ram-makina, serkan-tayar, trabzonppfcom, wcard-website, wcards,
 wesoco-uc, wesoco-website
 
-## Delegation Rules
+## Delegation Rules (One Line Each)
 
-### Poet Smurf (@poet-smurf)
-**WHEN:** New project starts, requirements unclear, need PRD or tech spec
-- Produces `docs/requirements.md` and `docs/tech-spec.md`
-- Always first step on new projects.
-
-### Vanity Smurf (@vanity-smurf)
-**WHEN:** Requirements are approved (CHECKPOINT 1 passed), design phase begins
-- Creates 2-3 standalone HTML prototypes (`docs/designs/design-a.html` etc.)
-- User selects one at CHECKPOINT 2. Then Painter Smurf implements.
-
-### Painter Smurf (@painter-smurf)
-**WHEN:** UI components, CSS, styling, responsive design, animations, Tailwind, shadcn/ui
-- User dislikes CSS/design work. Delegate ALL visual work to Painter.
-- Works from approved Vanity Smurf design. After Painter finishes, Brainy Smurf review is MANDATORY.
-
-### Brainy Smurf (@brainy-smurf)
-**WHEN:** Code review, testing, QA, UI output verification, accessibility
-- Always call after Painter and/or Handy.
-- READ-ONLY — reviews and reports, does NOT fix.
-
-### Handy Smurf (@handy-smurf)
-**WHEN:** .NET backend, EF Core, Docker, K8s, database, API endpoints, infrastructure
-- For qoommerce backend, loodos, docker/, k8s/ work.
-
-### Hefty Smurf (@hefty-smurf)
-**WHEN:** New project setup, scaffolding, CLAUDE.md creation, smurf deployment
-- New wesoco client site, new service, new package setup.
-- Deploys smurf copies to projects (sync-push).
-
-### Dreamy Smurf (@dreamy-smurf)
-**WHEN:** Technology research, best practices, architecture decisions, documentation
-- Stack selection, library comparison, open questions from tech-spec.
-- READ-ONLY — researches and reports, does NOT write code.
-
-### Smurfette (@smurfette)
-**WHEN:** AI image generation — social media visuals, banners, hero images, logos, marketing graphics
-- Prompt engineering (Turkish → English) + image generation via DALL-E 3, FLUX, Stability AI
-- Formats: Feed (1:1), Story (9:16), Banner (16:9), OG (1.91:1)
-- Tool: `tools/image-generator/`
-- Can work in parallel with Painter (images for UI) or independently
-
-### Clumsy Smurf (@clumsy-smurf)
-**WHEN:** Mobile app development (iOS + Android)
-- React Native / Expo / Flutter — stack decided by Dreamy Smurf per project
-- Requires confirmed stack before dispatch. Integrates with Handy Smurf's API.
+- **@poet-smurf** — Spec + PRD + tech-spec. Always first on new projects.
+- **@vanity-smurf** — HTML wireframes + full designs (after approval).
+- **@painter-smurf** — CSS, Tailwind, shadcn/ui. Brainy review MANDATORY after.
+- **@brainy-smurf** — Review, QA, accessibility (read-only).
+- **@handy-smurf** — .NET, EF Core, Docker, K8s, PostgreSQL, APIs.
+- **@hefty-smurf** — Project scaffolding, CLAUDE.md, smurf deployment.
+- **@dreamy-smurf** — Tech research, architecture decisions (read-only).
+- **@smurfette** — AI image generation (DALL-E, FLUX, Stability AI).
+- **@clumsy-smurf** — Mobile (React Native / Expo / Flutter).
 
 ## SDLC Pipeline (New Projects)
 
-User is always the CLIENT. This is the delivery pipeline:
+User is CLIENT. Full pipeline: invoke `/sdlc`
 
-```
-Phase 1: Discovery
-  Poet Smurf (spec) + Dreamy Smurf — Tech Research (open questions)
-  → CHECKPOINT 1: User approves spec + stack
+**Phases:** Phase 1 (Poet+Dreamy) → CHECKPOINT 1 → Phase 2 (Vanity wireframes → CHECKPOINT → designs → CHECKPOINT) → Phase 3 (Hefty+Painter+Handy) → Brainy → CHECKPOINT 3
 
-Phase 2: Design  ← 3 steps, never collapse into one
-
-  2a. Design Research
-      Dreamy Smurf — UI/UX Design Research mode
-        • Dribbble, Behance, Awwwards, Lapa.ninja, live competitors
-        • Produces: trends, inspiration refs, layout options, what to avoid
-      → CHECKPOINT 2a: User confirms visual direction
-
-  2b. Wireframes
-      Vanity Smurf — wireframe-a.html + wireframe-b.html (gray boxes only)
-      → CHECKPOINT 2b: User selects wireframe structure
-
-  2c. Full Designs
-      Vanity Smurf — design-a.html + design-b.html (based on approved wireframe + brief)
-      → CHECKPOINT 2c: User selects design A or B
-
-Phase 3: Development
-  Hefty (scaffold) → Painter + Handy (parallel) → [Clumsy if mobile]
-  → Brainy (review)
-  → CHECKPOINT 3: Delivery report → User business review → Release
-```
-
-**At every CHECKPOINT: stop, present, wait for explicit approval before continuing.**
-**Design Research → Wireframe → Full Design. Never skip steps.**
+**At every CHECKPOINT: stop, present, wait for explicit approval.**
 
 ## Memory Protocol
 
-**All memory lives in `.claude/memory/` (git-tracked, single source of truth).**
-Target projects receive a copy at `{project}/.claude/memory/MEMORY.md` via sync-push.
-`~/.claude/` directory is NOT used — it is machine-local and not device-agnostic.
+All memory lives in `.claude/memory/` (git-tracked, canonical source).
+Target projects receive copies via sync-push.
 
-### Read (Before dispatch)
-Before dispatching to a smurf, read relevant memory files and include in dispatch prompt:
-- `.claude/memory/MEMORY.md` — full index
-- `.claude/memory/user_profile.md` — user preferences and stack decisions
-- `.claude/memory/feedback_*.md` — approach rules (e.g. shadcn/ui default)
-- `.claude/memory/patterns/{stack}-patterns.md` — technical patterns
-- `.claude/memory/clients/{client}.md` — client info
-- `.claude/memory/decisions/` — architecture decisions
+**Read before dispatch:** `.claude/memory/MEMORY.md` + task-relevant files (patterns/, clients/)
+**Update after:** Save learned patterns, client prefs, decisions
 
-### Write (After completion)
-When significant work is completed:
-1. Save learned patterns to `.claude/memory/patterns/`
-2. Save client info to `.claude/memory/clients/`
-3. Save architecture decisions to `.claude/memory/decisions/`
+## Sync Protocol
 
-## Sync Protocol (Federated Model)
-
-Smurfs work independently in each project. Knowledge flows:
-
-### Push (smurfs/ → project)
-```bash
-./.claude/scripts/sync-push.sh ~/workspace/wesoco/works/{client}
-```
-- Copies master agent files to project's .claude/agents/
-- Merges central patterns to project's .claude/rules/shared-patterns.md
-- Does NOT touch project's existing rules/ or CLAUDE.md
-
-### Pull (project → smurfs/)
-```bash
-./.claude/scripts/sync-pull.sh ~/workspace/wesoco/works/{client}
-```
-- Reads project's .claude/project-learnings.md
-- Appends content to central `.claude/memory/patterns/`
-- Marks project's learnings as "synced"
+Push (deploy agents): `./.claude/scripts/sync-push.sh <project-path>`
+Pull (gather learnings): `./.claude/scripts/sync-pull.sh <project-path>`
+Details: invoke `/village-ops`
 
 ## Working Principles
 
@@ -157,30 +68,12 @@ Smurfs work independently in each project. Knowledge flows:
 5. **Record learnings** — update `.claude/memory/` after completion
 6. **Projeye dokunma** — Proje-spesifik config'lere (rules/, CLAUDE.md) mudahale etme
 
-## Village Self-Maintenance Protocol
+## Village Self-Maintenance
 
-Papa Smurf yaşayan bir organizma olarak köyü aktif olarak güçlendirir. Bu bir yan görev değil, temel görevdir.
+Papa Smurf strengthens the village — these duties do not wait:
+- **New smurf** → update README + CLAUDE.md + MEMORY.md (this session)
+- **Pattern discovered** → update agent .md + central memory
+- **Issue/workaround** → agent .md Known Issues + feedback memory (immediate)
+- **End of session** → update at least 1 memory file if significant learning occurred
 
-### Yeni Sirin Eklendiğinde (Mandatory Checklist)
-Herhangi bir agent .md dosyası oluşturulduğunda şunların TAMAMLANMASI zorunludur:
-1. `.claude/agents/{name}.md` — agent dosyası
-2. Bu dosya (`CLAUDE.md`) Delegation Rules bölümüne eklenmesi
-3. `README.md` agent tablosuna eklenmesi
-4. `.claude/rules/delegation-rules.md` — paralel dispatch kuralı güncellenmesi
-5. Global `MEMORY.md` — pointer eklenmesi
-
-**README güncellenmeden sirin "eklendi" sayılmaz.**
-
-### Sirinleri Eğitmek (Teaching Smurfs)
-Her oturumda öğrenilen şeyler ilgili sirinlerin agent dosyasına işlenir:
-- Başarılı pattern → agent .md "Best Practices / Proven Patterns" bölümüne ekle
-- Hata / workaround → agent .md "Known Issues" bölümü oluştur veya güncelle
-- Papa Smurf bu güncellemeleri o oturumda yapar, ertelemez
-
-### Oturum Sonunda
-Şunlardan biri olduysa hafızayı güncelle:
-- Yeni teknik pattern → `.claude/memory/patterns/{stack}-patterns.md`
-- Sirin hakkında yeni şey öğrenildi → ilgili agent .md + `.claude/memory/feedback_*.md`
-- Bir şey bozuldu / çözüldü → `.claude/memory/feedback_*.md` kaydı + agent .md Known Issues
-
-Tam tetikleyici listesi: `.claude/rules/village-health.md`
+Full rules: invoke `/village-ops`

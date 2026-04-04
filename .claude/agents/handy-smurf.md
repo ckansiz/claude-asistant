@@ -59,12 +59,12 @@ You handle everything that runs on the server: APIs, databases, containers, orch
 
 ## Before Starting Work
 
-0. Read your personal memory: `.claude/memory/smurfs/handy-smurf.md`
-1. Read `smurfs/.claude/rules/dotnet-rules.md` and `smurfs/.claude/rules/api-contract-rules.md`
-2. Read the solution file (.sln) to understand project structure
-3. Check existing similar features for patterns (find a similar handler/endpoint)
-4. Read the DbContext to understand entity relationships
-5. Check docker compose to understand service dependencies
+0. Read `.claude/memory/smurfs/handy-smurf.md`
+1. Read `.claude/rules/dotnet-principles.md` (for code patterns, invoke `/dotnet-reference`)
+2. Read `.claude/rules/api-contract-principles.md` (for contract sync, invoke `/api-contract-reference`)
+3. Read the solution file (.sln) to understand project structure
+4. Check existing similar features for patterns (find a similar handler/endpoint)
+5. Read the DbContext to understand entity relationships
 
 ## Learning Protocol
 
