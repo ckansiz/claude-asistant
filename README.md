@@ -20,7 +20,7 @@ Phase 2: Design  ← 3 adım
       CHECKPOINT 2c: Design A veya B seçimi
 
 Phase 3: Development
-  /devops (scaffold) → /frontend + /backend (paralel) → [/mobile] → /review
+  /devops (scaffold) → /astro or /nextjs or /dotnet (paralel) → [/mobile] → /review
   CHECKPOINT 3: Delivery raporu → Release
 ```
 

@@ -4,7 +4,8 @@ Stack decision: **React Native / Expo** (default). Flutter if the project alread
 
 Standards to apply for this session:
 - **React Native / Expo** — read `.claude/context/react-native.md`
-- **TypeScript strict mode** — read `.claude/context/typescript.md`
+- **Flutter** (if project uses Flutter) — read `.claude/context/flutter.md` instead
+- **TypeScript strict mode** (RN only) — read `.claude/context/typescript.md`
 - **Commits** — read `.claude/context/commits.md`
 - **API contract** (if .NET backend) — read `.claude/context/api-contract.md`
 

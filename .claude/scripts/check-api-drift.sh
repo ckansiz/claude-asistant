@@ -14,6 +14,11 @@ if [[ -z "$FILE" ]]; then
   exit 0
 fi
 
+# --- Guard: only run for files in actual project directories, not the smurfs config repo ---
+if [[ "$FILE" == */workspace/smurfs/* ]]; then
+  exit 0
+fi
+
 # --- Guard: api.generated.ts must never be manually edited ---
 if [[ "$FILE" == *"api.generated.ts" ]]; then
   echo ""

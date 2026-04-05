@@ -30,19 +30,22 @@ arzisi-project (Astro), asfire (Astro+React+Prisma), kanser-tedavi (Next.js),
 oltan (Next.js+Prisma+better-auth), serkan-tayar (Next.js),
 wcard-website (Astro 5+Svelte 5+Strapi v5), qretna-app (.NET+frontend)
 
-## Commands — Discipline Context (lazy-load)
+## Commands — Stack-Based (lazy-load)
 
 | Command | Activates | Loads |
 |---------|-----------|-------|
-| `/backend` | @builder | .NET + EF Core + API contract standards |
-| `/frontend` | @builder | Astro or Next.js + TypeScript standards |
-| `/mobile` | @builder | React Native / Expo standards |
+| `/dotnet` | @builder | .NET + EF Core + API contract + database + security + testing |
+| `/astro` | @builder | Astro + TypeScript + database + security + testing |
+| `/nextjs` | @builder | Next.js + TypeScript + database + security + testing |
+| `/mobile` | @builder | React Native / Expo (or Flutter) standards |
 | `/devops` | @builder | Docker, K8s, infra standards |
 | `/design` | @designer | HTML wireframe + design mockup workflow |
 | `/spec` | @architect | Requirements + tech spec workflow |
 | `/research` | @architect | Tech research + recommendation workflow |
 | `/review` | @reviewer | Code review + QA checklist |
 | `/create-image` | @image-gen | AI image generation (DALL-E, FLUX) |
+
+> `/frontend` is deprecated — use `/astro` or `/nextjs` instead.
 
 ## Agents
 
