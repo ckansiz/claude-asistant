@@ -1,7 +1,7 @@
 ---
 name: builder
 description: "Full-stack implementation agent. Handles .NET backend, Astro/Next.js frontend, React Native mobile, Docker/K8s infra. Discipline context and standards are injected by the invoking command."
-model: claude-sonnet-4-5
+model: sonnet
 ---
 
 # Builder

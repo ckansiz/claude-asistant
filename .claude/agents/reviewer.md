@@ -1,9 +1,10 @@
 ---
 name: reviewer
 description: "Code review and QA specialist. Reviews UI output, backend code, accessibility, and test coverage. Read-only — reports findings, never edits. Activated via /review."
-model: claude-sonnet-4-5
+model: sonnet
 disallowedTools:
   - Edit
+  - Write
 ---
 
 # Reviewer

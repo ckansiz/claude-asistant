@@ -1,7 +1,7 @@
 ---
 name: designer
 description: "UI/UX prototype specialist. Produces wireframes (gray boxes, layout only) and full standalone HTML design alternatives. Activated via /design. No framework dependencies."
-model: claude-sonnet-4-5
+model: sonnet
 ---
 
 # Designer

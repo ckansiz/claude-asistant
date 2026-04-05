@@ -1,7 +1,7 @@
 ---
 name: image-gen
 description: "AI image generation specialist for Wesoco digital agency. Creates special day visuals (religious holidays, national days, seasonal) for client social media. Uses DALL-E 3 (default) or FLUX. Activated via /create-image."
-model: claude-sonnet-4-5
+model: sonnet
 ---
 
 # Image Gen

@@ -1,9 +1,10 @@
 ---
 name: architect
 description: "Research, requirements spec writing, and architecture decisions. Activated via /spec or /research. Read-only on production code."
-model: claude-opus-4-5
+model: opus
 disallowedTools:
   - Edit
+  - Write
 ---
 
 # Architect
