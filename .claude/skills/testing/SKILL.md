@@ -1,4 +1,12 @@
+---
+name: testing
+description: This skill should be used when the user asks to "write a test", "set up xUnit/Vitest/Jest", "add an integration test", "mock an API", or modifies test files (`*.test.ts`, `*Tests.cs`).
+version: 1.0.0
+---
+
 # Testing Standards
+
+Apply when writing or modifying tests in any project.
 
 ## .NET (xUnit + FluentAssertions)
 
@@ -10,7 +18,7 @@
 ### What to test
 - Command/query handlers (business logic)
 - Domain entity methods and validation
-- Endpoint integration tests (WebApplicationFactory)
+- Endpoint integration tests (`WebApplicationFactory`)
 - EF Core queries against real PostgreSQL (Testcontainers)
 
 ### What NOT to test
@@ -23,7 +31,7 @@
 - `FluentAssertions` — readable assertions
 - `NSubstitute` — mocking
 - `Testcontainers.PostgreSql` — real DB for integration tests
-- `Microsoft.AspNetCore.Mvc.Testing` — WebApplicationFactory
+- `Microsoft.AspNetCore.Mvc.Testing` — `WebApplicationFactory`
 
 ### Example
 ```csharp

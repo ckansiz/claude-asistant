@@ -1,23 +1,32 @@
-# .NET Standards
+---
+name: dotnet
+description: This skill should be used when the user asks to "write .NET code", "create a command handler", "add an endpoint", "configure EF Core", "set up CQRS", "use Result pattern", or works on .NET 10 / ASP.NET Core / Minimal API / Entity Framework Core projects (qoommerce, qretna, loodos a101-mep-backend).
+version: 1.0.0
+---
+
+# .NET 10 Backend Standards
+
+Apply when implementing .NET 10 + ASP.NET Core + EF Core + PostgreSQL backends following Clean Architecture and CQRS without MediatR.
 
 ## Solution Structure
 
 ```
 src/
-  {Project}.Domain/           # Entities, Value Objects, Repository interfaces
-  {Project}.Application/      # Commands, Queries, Validators, DTOs
-  {Project}.Core/             # Shared abstractions: ICommand, IQuery, Result<T>
-  {Project}.Infrastructure/   # Handler implementations, external services
-  {Project}.EntityFrameworkCore/  # DbContext, Migrations, EF config
-  {Project}.Provider/         # ASP.NET Core host: Endpoints, Middleware, DI
+  {Project}.Domain/                # Entities, Value Objects, Repository interfaces
+  {Project}.Application/           # Commands, Queries, Validators, DTOs
+  {Project}.Core/                  # Shared abstractions: ICommand, IQuery, Result<T>
+  {Project}.Infrastructure/        # Handler implementations, external services
+  {Project}.EntityFrameworkCore/   # DbContext, Migrations, EF config
+  {Project}.Provider/              # ASP.NET Core host: Endpoints, Middleware, DI
 ```
 
 Dependency flow: Domain ← Application ← Infrastructure ← Provider; Domain ← Core
 
 ## CQRS (No MediatR)
 
+Define handlers explicitly with `ICommandHandler<TCommand, TResult>` / `IQueryHandler<TQuery, TResult>` abstractions in `{Project}.Core`.
+
 ```csharp
-// Application — Command + Validator
 public record CreateProductCommand : ICommand<Result<Guid>>
 {
     public string Name { get; init; } = string.Empty;
@@ -33,7 +42,6 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
     }
 }
 
-// Infrastructure — Handler
 public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(CreateProductCommand command, CancellationToken ct = default)
@@ -48,7 +56,7 @@ public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand,
 
 ## Result Pattern
 
-**Never throw business exceptions.** Return `Result<T>` from all handlers.
+Never throw business exceptions. Return `Result<T>` from all handlers. Reserve exceptions for unrecoverable infrastructure failures.
 
 ```csharp
 public class Result<T>
@@ -56,8 +64,6 @@ public class Result<T>
     public bool IsSuccess { get; }
     public T? Value { get; }
     public string? Error { get; }
-
-    private Result(bool isSuccess, T? value, string? error) { ... }
 
     public static Result<T> Success(T value) => new(true, value, null);
     public static Result<T> Failure(string error) => new(false, default, error);
@@ -72,7 +78,7 @@ public static IEndpointRouteBuilder MapProductEndpoints(this IEndpointRouteBuild
     var group = app.MapGroup("/api/products").WithTags("Products");
 
     /// <summary>Get product by ID</summary>
-    group.MapGet("/{id:guid}", async (Guid id, IQueryHandler<...> handler, CancellationToken ct) =>
+    group.MapGet("/{id:guid}", async (Guid id, IQueryHandler<GetProductByIdQuery, Result<ProductDto>> handler, CancellationToken ct) =>
     {
         var result = await handler.Handle(new GetProductByIdQuery { Id = id }, ct);
         return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound();
@@ -80,16 +86,6 @@ public static IEndpointRouteBuilder MapProductEndpoints(this IEndpointRouteBuild
     .WithSummary("Get product by ID")
     .Produces<ProductDto>()
     .ProducesProblem(404);
-
-    group.MapPost("/", async (CreateProductCommand command, ICommandHandler<...> handler, CancellationToken ct) =>
-    {
-        var result = await handler.Handle(command, ct);
-        return result.IsSuccess
-            ? Results.Created($"/api/products/{result.Value}", new { id = result.Value })
-            : Results.BadRequest(new { error = result.Error });
-    })
-    .Produces<object>(201)
-    .ProducesValidationProblem();
 
     return app;
 }
@@ -112,12 +108,11 @@ public static IEndpointRouteBuilder MapProductEndpoints(this IEndpointRouteBuild
 
 ```csharp
 builder.Services.AddOpenApi();
-// ...
-app.MapOpenApi();           // → /openapi/v1.json
-app.MapScalarApiReference(); // → /scalar/v1
+app.MapOpenApi();             // → /openapi/v1.json
+app.MapScalarApiReference();  // → /scalar/v1
 ```
 
-XML doc comments on all endpoints — required for TypeScript codegen.
+XML doc comments on every endpoint — required for TypeScript codegen on the frontend (see `api-contract` skill).
 
 ## EF Core
 
@@ -126,14 +121,17 @@ XML doc comments on all endpoints — required for TypeScript codegen.
 - Entity config: `IEntityTypeConfiguration<T>` classes, not inline `OnModelCreating`
 - Migration naming: `dotnet ef migrations add Add{Entity}Table`
 
+See `database` skill for migration workflow and PostgreSQL conventions.
+
 ## Package Management
 
+Centralize versions in `Directory.Packages.props`:
+
 ```xml
-<!-- Directory.Packages.props -->
 <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 ```
 
-In `.csproj` files, omit versions: `<PackageReference Include="PackageName" />`
+In `.csproj`, omit versions: `<PackageReference Include="PackageName" />`.
 
 ## Logging
 
@@ -141,7 +139,7 @@ In `.csproj` files, omit versions: `<PackageReference Include="PackageName" />`
 // ✅ Structured — queryable
 _logger.LogInformation("Product {ProductId} created", product.Id);
 
-// ❌ String interpolation — loses structured data
+// ❌ Loses structured data
 _logger.LogInformation($"Product {product.Id} created");
 ```
 
@@ -150,7 +148,7 @@ _logger.LogInformation($"Product {product.Id} created");
 - `#nullable enable` in all files (or `Directory.Build.props`)
 - Implicit usings enabled globally
 - Records for DTOs, Commands, Queries
-- `async/await` all the way — no `.Result` or `.Wait()`
+- `async/await` all the way — never `.Result` or `.Wait()`
 - `CancellationToken` on all async public methods
 - Max ~5 constructor parameters — more indicates SRP violation
 
@@ -166,3 +164,13 @@ builder.Services.AddOpenTelemetry()
         .AddAspNetCoreInstrumentation()
         .AddOtlpExporter());
 ```
+
+Ship to Grafana LGTM stack — see `devops` skill.
+
+## Companion Skills
+
+- `database` — PostgreSQL conventions, EF Core migration workflow
+- `api-contract` — OpenAPI ↔ TypeScript codegen
+- `security` — auth, validation, error handling
+- `testing` — xUnit, FluentAssertions, integration tests
+- `commits` — conventional commit format

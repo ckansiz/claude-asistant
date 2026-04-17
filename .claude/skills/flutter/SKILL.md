@@ -1,6 +1,12 @@
+---
+name: flutter
+description: This skill should be used when the user asks to "build a Flutter app", "add a Riverpod provider", "use GoRouter", "configure Dio", or works on Flutter mobile projects (secondary mobile stack — only when the project already uses Flutter).
+version: 1.0.0
+---
+
 # Flutter Standards (Secondary Mobile Option)
 
-Flutter is the secondary mobile option — use only when the project already uses Flutter. Default is React Native / Expo.
+Flutter is the secondary mobile option — apply only when the project already uses Flutter. Default is React Native / Expo (`react-native` skill).
 
 ## Project Structure
 
@@ -35,7 +41,7 @@ lib/
 ## Networking
 
 - **Dio** for HTTP — interceptors for auth tokens, logging
-- Generate models from API spec when possible (json_serializable or freezed)
+- Generate models from API spec when possible (`json_serializable` or `freezed`)
 
 ## Styling
 
@@ -64,3 +70,8 @@ flutter run                          # Development
 flutter build apk --release          # Android
 flutter build ios --release          # iOS
 ```
+
+## Companion Skills
+
+- `commits` — commit conventions
+- `api-contract` — load when project has .NET backend

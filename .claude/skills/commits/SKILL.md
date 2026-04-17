@@ -1,6 +1,12 @@
+---
+name: commits
+description: This skill should be used when the user asks to "commit", "create a commit", "write a commit message", or stages and commits changes in any project.
+version: 1.0.0
+---
+
 # Commit Conventions
 
-All commits follow **Conventional Commits**.
+Apply for every git commit. All commits follow Conventional Commits.
 
 ## Format
 
@@ -62,6 +68,6 @@ BREAKING CHANGE: email verification now required before proceeding
 
 ## Rules
 
-- One concern per commit — don't bundle unrelated changes
+- One concern per commit — never bundle unrelated changes
 - Never commit secrets or API keys
 - Use `Closes #123` in footer when closing an issue

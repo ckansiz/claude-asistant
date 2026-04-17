@@ -1,4 +1,12 @@
+---
+name: security
+description: This skill should be used when the user asks to "add authentication", "configure auth", "validate input", "set up CORS", "add rate limiting", "handle secrets", or works on auth/security-sensitive code.
+version: 1.0.0
+---
+
 # Security Standards
+
+Apply when implementing authentication, authorization, input validation, or any security-sensitive code.
 
 ## Authentication
 

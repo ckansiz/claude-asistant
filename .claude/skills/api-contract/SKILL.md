@@ -1,6 +1,12 @@
+---
+name: api-contract
+description: This skill should be used when a project has both a .NET backend AND a TypeScript frontend (Astro/Next.js/React Native), and the user asks to "regenerate API types", "sync DTO contract", "run gen:api", or modifies endpoints/DTOs that affect the OpenAPI ↔ TypeScript codegen pipeline.
+version: 1.0.0
+---
+
 # API Contract Standards (OpenAPI ↔ TypeScript)
 
-Ensures backend changes are immediately caught by the TypeScript compiler on the frontend.
+Apply for cross-stack projects (.NET backend + TS frontend like qoommerce, qretna). Ensures backend changes are immediately caught by the TypeScript compiler on the frontend.
 
 ## How It Works
 
@@ -15,8 +21,8 @@ Ensures backend changes are immediately caught by the TypeScript compiler on the
 
 ```csharp
 builder.Services.AddOpenApi();
-app.MapOpenApi();            // → /openapi/v1.json
-app.MapScalarApiReference(); // → /scalar/v1
+app.MapOpenApi();             // → /openapi/v1.json
+app.MapScalarApiReference();  // → /scalar/v1
 ```
 
 ### 2. Every endpoint needs XML summary + Produces annotations
@@ -67,8 +73,8 @@ GET    /api/product-categories → kebab-case compound names
 
 ### Generated file rules
 
-- `src/types/api.generated.ts` — **never edit manually**
-- **Commit to git** — diffs show contract changes
+- `src/types/api.generated.ts` — never edit manually
+- Commit to git — diffs show contract changes
 
 ### Using generated types
 
@@ -93,4 +99,8 @@ async function getProduct(id: string): Promise<Product> {
 # 5. Fix + commit both together
 ```
 
-TypeScript errors after `gen:api` are **intentional** — the type system caught a contract break.
+TypeScript errors after `gen:api` are intentional — the type system caught a contract break.
+
+## Drift Detection
+
+The repo provides a helper script: `.claude/scripts/check-api-drift.sh` — run before committing to confirm the generated file matches the live spec.

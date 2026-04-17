@@ -1,4 +1,12 @@
+---
+name: react-native
+description: This skill should be used when the user asks to "build a React Native app", "add an Expo screen", "use Expo Router", "set up NativeWind", "add a Zustand store", or works on React Native / Expo mobile projects.
+version: 1.0.0
+---
+
 # React Native / Expo Standards
+
+Apply when implementing React Native + Expo (managed workflow) mobile apps. Default mobile stack — use Flutter only when the project already uses it.
 
 ## Stack
 
@@ -6,8 +14,8 @@
 - **Navigation**: Expo Router (file-based, App Router analogy)
 - **Styling**: NativeWind v4 (Tailwind class names on native components)
 - **State**: Zustand (global) + TanStack Query v5 (server state)
-- **Types**: TypeScript strict mode — see `typescript.md`
-- **API**: Generated types from `api.generated.ts` (see `api-contract.md`)
+- **Types**: TypeScript strict mode — see `typescript` skill
+- **API**: Generated types from `api.generated.ts` (see `api-contract` skill)
 
 ## Project Structure
 
@@ -40,15 +48,13 @@ assets/
 
 ## Navigation (Expo Router)
 
-```tsx
-// File-based — same mental model as Next.js App Router
-// app/products/[id].tsx → /products/:id
+File-based — same mental model as Next.js App Router. `app/products/[id].tsx` → `/products/:id`.
 
+```tsx
 import { useLocalSearchParams, router } from 'expo-router'
 
 export default function ProductScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
-
   return (
     <View>
       <Button onPress={() => router.back()}>Back</Button>
@@ -83,7 +89,6 @@ import { Platform } from 'react-native'
 
 export function Header() {
   const insets = useSafeAreaInsets()
-
   return (
     <View style={{ paddingTop: insets.top }} className="bg-white px-4 pb-3">
       <Text className="text-xl font-bold">Title</Text>
@@ -91,16 +96,16 @@ export function Header() {
   )
 }
 
-// Platform-specific behavior
 const isAndroid = Platform.OS === 'android'
 ```
 
 ## Keyboard Handling
 
+Always wrap forms in `KeyboardAvoidingView`:
+
 ```tsx
 import { KeyboardAvoidingView, Platform } from 'react-native'
 
-// Always wrap forms in KeyboardAvoidingView
 <KeyboardAvoidingView
   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
   className="flex-1"
@@ -197,11 +202,6 @@ export const api = {
 EXPO_PUBLIC_API_URL=http://localhost:5000
 ```
 
-```tsx
-// Access in code
-const url = process.env.EXPO_PUBLIC_API_URL
-```
-
 ## Common Patterns
 
 ### Loading + Error states
@@ -226,21 +226,22 @@ if (error) return <ErrorView message={error.message} />
 ## Build & Deploy
 
 ```bash
-# Development
-npx expo start
-
-# Preview build (OTA updates)
-eas build --profile preview --platform all
-
-# Production
-eas build --profile production --platform all
+npx expo start                                    # Development
+eas build --profile preview --platform all        # Preview (OTA updates)
+eas build --profile production --platform all     # Production
 eas submit --platform all
 ```
 
 ## Code Style
 
-- `async/await` — no `.then()` chains
+- `async/await` — never `.then()` chains
 - Functional components only — no class components
 - Custom hooks for all business logic (`use-*.ts`)
 - Props interface for every component
 - No inline styles — NativeWind classes only
+
+## Companion Skills
+
+- `typescript` — strict mode standards
+- `commits` — commit conventions
+- `api-contract` — load when project has .NET backend

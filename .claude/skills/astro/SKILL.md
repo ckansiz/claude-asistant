@@ -1,21 +1,29 @@
-# Astro Standards
+---
+name: astro
+description: This skill should be used when the user asks to "build an Astro page", "add an island", "create an API route in Astro", "use Drizzle", "configure SSR", or works on Astro 5 projects (qoommerce app, arzisi-project, asfire, wcard-website).
+version: 1.0.0
+---
+
+# Astro 5 Standards
+
+Apply when implementing Astro 5 + TypeScript + Tailwind + Drizzle (PostgreSQL) projects with islands architecture.
 
 ## Directory Structure
 
 ```
 src/
-  pages/              # File-based routing
-    api/              # API endpoints (*.ts)
+  pages/                # File-based routing
+    api/                # API endpoints (*.ts)
   components/
-    ui/               # Reusable UI primitives
-    features/         # Feature-specific
-    layout/           # Header, Footer, Nav
+    ui/                 # Reusable UI primitives
+    features/           # Feature-specific
+    layout/             # Header, Footer, Nav
   layouts/
     Base.astro
   lib/
-    db/               # DB client + queries
+    db/                 # DB client + queries
     utils/
-    hooks/            # React hooks (for island components)
+    hooks/              # React hooks (for island components)
     types/
   styles/
     globals.css
@@ -28,9 +36,9 @@ tailwind.config.mjs
 
 ## Component Types
 
-**.astro files** — server-rendered, zero client JS. Default choice.
+`.astro` files — server-rendered, zero client JS. Default choice for static content.
 
-**.tsx files** — interactive islands that need state/events. No `'use client'` (that's Next.js).
+`.tsx` files — interactive islands needing state/events. Never include `'use client'` (that is Next.js syntax).
 
 ```tsx
 // AddToCartButton.tsx — interactive island
@@ -71,7 +79,6 @@ export const GET: APIRoute = async ({ request }) => {
 
 export const POST: APIRoute = async ({ request }) => {
   const body = await request.json()
-  // validate + insert
   return new Response(JSON.stringify({ id }), { status: 201 })
 }
 ```
@@ -88,11 +95,11 @@ const client = postgres(import.meta.env.DATABASE_URL)
 export const db = drizzle(client, { schema })
 ```
 
-Existing projects: TypeORM and Prisma supported — don't migrate unless asked.
+Existing projects: TypeORM and Prisma supported — never migrate unless asked. See `database` skill for Drizzle migration workflow.
 
 ## Tailwind
 
-Use Tailwind **v3** with `@astrojs/tailwind` integration. Do NOT mix v3 and v4 in same project.
+Use Tailwind **v3** with `@astrojs/tailwind` integration. Never mix v3 and v4 in the same project.
 
 ```mjs
 // astro.config.mjs
@@ -102,7 +109,7 @@ export default defineConfig({ integrations: [tailwind()] })
 
 ## Images
 
-**Always use Astro's `<Image>` component.** Never raw `<img>` for local assets.
+Always use Astro's `<Image>` component. Never raw `<img>` for local assets.
 
 ```astro
 ---
@@ -115,14 +122,9 @@ import heroImage from '@/assets/hero.jpg'
 ## SSR vs Static
 
 ```mjs
-// Server-rendered
-output: 'server', adapter: node({ mode: 'standalone' })
-
-// Hybrid (mix)
-output: 'hybrid'  // + export const prerender = false on SSR pages
-
-// Static
-output: 'static'
+output: 'server', adapter: node({ mode: 'standalone' })  // SSR
+output: 'hybrid'                                          // Mix; export const prerender = false on SSR pages
+output: 'static'                                          // Static
 ```
 
 ## Middleware
@@ -151,7 +153,7 @@ interface ImportMetaEnv {
 }
 ```
 
-## TypeScript
+## TypeScript Config
 
 ```json
 {
@@ -159,3 +161,12 @@ interface ImportMetaEnv {
   "compilerOptions": { "baseUrl": ".", "paths": { "@/*": ["./src/*"] } }
 }
 ```
+
+## Companion Skills
+
+- `typescript` — strict mode, naming, component structure
+- `database` — Drizzle migration workflow, PostgreSQL conventions
+- `security` — input validation, CORS, auth patterns
+- `testing` — Vitest standards
+- `commits` — commit conventions
+- `api-contract` — load when project also has a .NET backend

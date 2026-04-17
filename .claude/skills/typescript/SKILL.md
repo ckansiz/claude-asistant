@@ -1,4 +1,12 @@
+---
+name: typescript
+description: This skill should be used when the user asks to "set up TypeScript", "write strict types", "add Zod validation", or whenever editing `.ts` / `.tsx` files in Astro, Next.js, or React Native projects.
+version: 1.0.0
+---
+
 # TypeScript Standards
+
+Apply for all `.ts` / `.tsx` files across Astro, Next.js, and React Native projects.
 
 ## Strict Config (Mandatory)
 
@@ -17,7 +25,7 @@
 ## Forbidden
 
 - `any` → use `unknown` and narrow with type guards
-- `// @ts-ignore` → fix the type error
+- `// @ts-ignore` → fix the type error instead
 - `// @ts-nocheck` → never
 - Type assertions (`as X`) without prior validation
 
@@ -84,10 +92,10 @@ async function fetchProduct(id: string): Promise<Product> {
 ## Null Handling
 
 ```ts
-// ✅
+// ✅ optional chaining + nullish coalescing
 const name = user?.profile?.displayName ?? 'Anonymous'
 
-// ✅ Early return
+// ✅ Early return narrows types
 function process(order: Order | null) {
   if (!order) return
   // order is Order here
@@ -119,7 +127,6 @@ async function handler(input: unknown) {
 ## Explicit Return Types (Exported Functions)
 
 ```ts
-// ✅
 export function formatDate(date: Date): string { ... }
 export async function getUser(id: string): Promise<User | null> { ... }
 ```

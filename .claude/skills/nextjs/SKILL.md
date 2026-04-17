@@ -1,4 +1,12 @@
-# Next.js Standards
+---
+name: nextjs
+description: This skill should be used when the user asks to "build a Next.js page", "add a Server Component", "create an API route handler", "set up Prisma", "use shadcn/ui", or works on Next.js 15 / App Router projects (kanser-tedavi, oltan, serkan-tayar).
+version: 1.0.0
+---
+
+# Next.js 15 Standards
+
+Apply when implementing Next.js 15 + App Router + TypeScript + shadcn/ui + Prisma (PostgreSQL).
 
 ## Directory Structure
 
@@ -29,7 +37,7 @@ src/
 
 ## Server vs Client Components
 
-Default: **Server Component** (no directive needed).
+Default to Server Component (no directive needed).
 
 Add `'use client'` only when the component needs: event handlers, `useState`/`useReducer`, browser APIs, `useEffect`.
 
@@ -49,8 +57,8 @@ export function AddToCartButton({ productId }: { productId: string }) {
 
 ## Data Fetching
 
-- **Server components**: direct DB via Prisma, or `fetch()` with Next.js caching
-- **Client components**: TanStack Query — no raw `useEffect` + `fetch`
+- Server components: direct DB via Prisma, or `fetch()` with Next.js caching
+- Client components: TanStack Query — never raw `useEffect` + `fetch`
 
 ## Prisma Singleton
 
@@ -62,7 +70,7 @@ export const db = globalForPrisma.prisma ?? new PrismaClient()
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
 ```
 
-Always `prisma migrate dev`, never `prisma db push` in production.
+Always `prisma migrate dev`, never `prisma db push` in production. See `database` skill.
 
 ## API Route Handlers
 
@@ -88,7 +96,7 @@ export async function POST(request: NextRequest) {
 
 ## Error Handling Files
 
-Each route segment: `error.tsx` (`'use client'`), `not-found.tsx`, `loading.tsx`
+Each route segment: `error.tsx` (`'use client'`), `not-found.tsx`, `loading.tsx`.
 
 ## shadcn/ui
 
@@ -101,7 +109,7 @@ Components land in `src/components/ui/` — never edit generated files. Customiz
 
 ## Tailwind
 
-**New projects: Tailwind v4** (CSS-based config, no `tailwind.config.js`)
+New projects: Tailwind v4 (CSS-based config, no `tailwind.config.js`).
 
 ```css
 /* globals.css */
@@ -111,12 +119,12 @@ Components land in `src/components/ui/` — never edit generated files. Customiz
 }
 ```
 
-**Existing v3 projects:** Don't migrate unless doing a major refactor.
+Existing v3 projects: never migrate unless doing a major refactor.
 
 ## Authentication
 
-- **New projects**: `better-auth`
-- **Existing**: Keep NextAuth unless full auth rewrite
+- New projects: `better-auth`
+- Existing: keep NextAuth unless full auth rewrite
 
 ## Imports
 
@@ -131,3 +139,12 @@ Always `@/` imports. Relative imports (`../../`) only within the same feature fo
 | Hooks | camelCase + `use` prefix (`useProductFilter.ts`) |
 | Utils | kebab-case (`format-currency.ts`) |
 | API routes | kebab-case dir (`api/product-orders/route.ts`) |
+
+## Companion Skills
+
+- `typescript` — strict mode, naming, component structure
+- `database` — Prisma migration workflow, PostgreSQL conventions
+- `security` — input validation, CORS, auth patterns
+- `testing` — Vitest standards
+- `commits` — commit conventions
+- `api-contract` — load when project also has a .NET backend
