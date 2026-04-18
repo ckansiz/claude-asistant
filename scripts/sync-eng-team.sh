@@ -160,11 +160,15 @@ fi
 # --- rsync helpers ----------------------------------------------------------
 
 # run_rsync <mode: dry|apply> <src> <dst>
+#
+# --checksum is always on: without it, rsync flags every file whose mtime
+# differs — and the upstream clone has fresh mtimes from `git clone`, so
+# identical content would show as a pending change on every run.
 run_rsync() {
   local mode="$1"
   local src="$2"
   local dst="$3"
-  local flags=(-a)
+  local flags=(-a --checksum)
 
   if [[ "$mode" == "dry" ]]; then
     flags+=(-n --itemize-changes)
