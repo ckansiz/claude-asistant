@@ -1,6 +1,6 @@
 ---
 name: visual-regression
-description: This skill should be used when the user asks to "run visual tests", "check for UI regressions", "compare screenshots", "update Playwright baselines", "add visual test", or invokes /ui-test. Drives Playwright-based screenshot comparison, severity classification, and baseline update decisions.
+description: This skill should be used when the user asks to "run visual tests", "check for UI regressions", "compare screenshots", "update Playwright baselines", "add visual test", or invokes /visual-regression. Drives Playwright-based screenshot comparison, severity classification, and baseline update decisions.
 version: 1.0.0
 ---
 

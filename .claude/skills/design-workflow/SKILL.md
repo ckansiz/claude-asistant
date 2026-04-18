@@ -1,6 +1,6 @@
 ---
 name: design-workflow
-description: This skill should be used when the user asks to "design a page", "make wireframes", "create mockups", "produce HTML design alternatives", "explore design directions", or invokes /design. Owns the wireframe-first → full HTML mockup pipeline (handed to @designer).
+description: This skill should be used when the user asks to "design a page", "make wireframes", "create mockups", "produce HTML design alternatives", "explore design directions", or invokes /design-workflow. Owns the wireframe-first → full HTML mockup pipeline (handed to @designer).
 version: 1.0.0
 ---
 

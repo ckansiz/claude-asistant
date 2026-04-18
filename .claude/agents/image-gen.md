@@ -1,6 +1,6 @@
 ---
 name: image-gen
-description: "AI image generation specialist for Wesoco digital agency. Creates special-day visuals (religious holidays, national days, seasonal) for client social media. Uses DALL-E 3 (default), FLUX, or Stable Image Core. Activated via /create-image."
+description: "AI image generation specialist for Wesoco digital agency. Creates special-day visuals (religious holidays, national days, seasonal) for client social media. Uses DALL-E 3 (default), FLUX, or Stable Image Core. Activated via image-generation skill."
 model: sonnet
 disallowedTools:
   - Edit

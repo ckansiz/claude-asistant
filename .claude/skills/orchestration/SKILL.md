@@ -24,9 +24,20 @@ The orchestrator is the **only** role that talks to the user. @builder / @review
 ```
 User request
     ↓
-Orchestrator: analyze, ask clarifying questions
+Orchestrator: Intake Gate — is this trivial or does it need discovery?
+    │
+    ├─ Trivial (<2h, single file, obvious) → skip to Plan
+    │
+    └─ Non-trivial → @architect: Intake (intake + edge-cases skills)
+                              ↓
+                     Intake Brief → user approval
+                              ↓
+                     Recommended Next Step chosen:
+                         ├─ XL → spec-writing → @architect writes requirements + tech-spec
+                         ├─ M/L → plan-mode
+                         └─ Hotfix → hotfix skill (intake compressed)
     ↓
-@architect: feasibility + tech plan  (tech-research / spec-writing skills)
+@architect (if /spec): feasibility + tech plan  (tech-research / spec-writing skills)
     ↓
 User: approves plan
     ↓
@@ -34,14 +45,31 @@ User: approves plan
     ↓ (quality check FAIL → back to @builder, max 3 iter)
 @reviewer (or @architect): code review
     ↓ (CHANGES_REQUESTED → back to @builder, max 3 iter)
-@reviewer with testing skill: run tests
+@reviewer with testing skill: run tests (unit + integration + smoke/E2E as scope demands)
     ↓ (FAIL → back to @builder, max 3 iter)
 Orchestrator: Production Readiness Checklist
     ↓
-Orchestrator: open PR, deliver to user
+Orchestrator: open PR + Client Report (client-report skill) → deliver to user
 ```
 
 If any loop hits 3 iterations without passing, stop and report honestly to the user — do not keep spinning.
+
+## Intake Gate — When to Run Intake
+
+Before delegating anything, the orchestrator decides whether an intake brief is required.
+
+| Signal | Intake required? |
+|--------|------------------|
+| Task estimate <2h, single file, obvious change | No — direct to Plan |
+| New feature, new endpoint, or new page | Yes |
+| Bug with unclear root cause or cross-file impact | Yes |
+| Auth / payment / data-deletion / schema touch | Yes (never skipped) |
+| New integration or third-party service | Yes |
+| New client or first task on a project | Yes |
+| Hotfix | Intake compressed into step 1 of `hotfix` skill — not full brief |
+| Copy tweak, typo, config bump | No |
+
+When in doubt, run intake. Cheap compared to the cost of misunderstood scope.
 
 ## Quality Gates — Definition of Done
 
@@ -153,15 +181,18 @@ The orchestrator runs this checklist before opening a PR or declaring work done:
 
 ```
 ## Production Readiness
+- [ ] Intake brief (if applicable) — approved and referenced
+- [ ] Edge-case table (from `edge-cases` skill) — every row resolved (handled / tested / documented / out-of-scope)
 - [ ] Builder quality check — all PASS
 - [ ] Code review — APPROVED
-- [ ] Tester verdict — PASS
+- [ ] Tester verdict — PASS (unit + integration + smoke/E2E as scope demands)
 - [ ] New behavior matches user intent
 - [ ] No regressions (existing tests intact)
 - [ ] No destructive changes, or user approved them
 - [ ] Atomic Conventional Commits
 - [ ] Branch pushed
 - [ ] PR opened with changelog section
+- [ ] Client report (if client-facing) drafted via `client-report` skill
 ```
 
 Any unchecked item → surface it explicitly to the user, never hide gaps.
@@ -189,9 +220,12 @@ Orchestration overhead should match change scope — do not run a full loop for 
 
 ## Companion Skills
 
+- `intake` — runs at the Intake Gate; produces the brief that feeds spec/plan
+- `edge-cases` — systematic non-happy-path sweep, referenced by intake/spec/plan/review/testing
 - `plan-mode` — planning discipline before any delegation
 - `new-feature` / `bug-fix` / `hotfix` — specific workflow variants
 - `code-review` — reviewer checklist
-- `testing` — test strategy per stack
+- `testing` — test strategy per stack (unit, integration, smoke, E2E)
+- `client-report` — Turkish client-facing reports at the end of the loop
 - `commits` — commit message format
 - `git-workflow` — branch strategy, PR template

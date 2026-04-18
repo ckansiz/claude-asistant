@@ -1,6 +1,6 @@
 ---
 name: tech-research
-description: This skill should be used when the user asks to "research a library", "compare frameworks", "evaluate options", "pick a tool", "should we use X or Y", or invokes /research. Produces a clear recommendation with trade-offs (handed to @architect).
+description: This skill should be used when the user asks to "research a library", "compare frameworks", "evaluate options", "pick a tool", "should we use X or Y", or invokes /tech-research. Produces a clear recommendation with trade-offs (handed to @architect).
 version: 1.0.0
 ---
 

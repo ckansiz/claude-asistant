@@ -30,17 +30,19 @@ arzisi-project (Astro), asfire (Astro+React+Prisma), kanser-tedavi (Next.js),
 oltan (Next.js+Prisma+better-auth), serkan-tayar (Next.js),
 wcard-website (Astro 5+Svelte 5+Strapi v5), qretna-app (.NET+frontend)
 
-## Architecture: Agents + Skills + Commands
+## Architecture: Agents + Skills
 
-**Agents** role-only (who acts). **Skills** technical + procedural knowledge (what + how); auto-load by description match. **Commands** thin slash-entry points that activate the right agent + trigger skills.
+**Agents** role-only (who acts, who can edit). **Skills** technical + procedural knowledge (what + how); auto-load by description match and are invocable directly by name (`/skill-name` or natural language like "write a spec"). No separate commands layer — every slash command *is* a skill.
 
 ### Agents (`.claude/agents/`)
 
-- **@architect** — Research, requirements, architecture, orchestration (read-only on code)
-- **@builder** — Full-stack implementation; stack standards arrive via skills
-- **@designer** — HTML wireframes and design mockups
-- **@reviewer** — Code review and QA (read-only)
-- **@image-gen** — AI image generation for Wesoco clients
+- **@architect** — Discovery (intake), research, specs, architecture, orchestrator during loops. Read-only on production code; may write under `docs/`.
+- **@builder** — Full-stack implementation. Only agent allowed to edit production source. Must resolve every edge-case row.
+- **@reviewer** — Code review + test execution (unit/integration/smoke/E2E/visual). Audits the edge-case table. Read-only.
+- **@designer** — HTML wireframes + mockups. Must cover empty/loading/error/long-content states on both viewports.
+- **@image-gen** — AI image generation for Wesoco clients.
+
+Client-facing reports (`client-report`) and handoffs (`client-handoff`) have **no dedicated agent** — the main session produces them directly by invoking the skill. These are freelancer-to-client communication, not an internal loop role.
 
 ### Skills (`.claude/skills/`)
 
@@ -50,8 +52,11 @@ Stack:
 Cross-cutting:
 - `typescript`, `database`, `security`, `testing`, `commits`, `git-workflow`, `api-contract`
 
-Design / spec / review:
-- `design-workflow`, `image-generation`, `spec-writing`, `tech-research`, `code-review`
+Discovery & planning:
+- `intake`, `edge-cases`, `spec-writing`, `tech-research`, `plan-mode`
+
+Design / review:
+- `design-workflow`, `image-generation`, `code-review`
 
 Ship & run:
 - `deployment`, `seo`, `performance`
@@ -60,32 +65,42 @@ Client-facing features:
 - `forms`, `payments`, `cms`, `i18n`
 
 Process & orchestration:
-- `orchestration`, `plan-mode`, `new-feature`, `bug-fix`, `hotfix`, `visual-regression`
+- `orchestration`, `new-feature`, `bug-fix`, `hotfix`, `visual-regression`
 
 Freelance practice:
-- `client-handoff`
+- `client-handoff`, `client-report`
 
-### Commands (`.claude/commands/`)
+### Invocation
 
-| Command | Activates | Skills it triggers |
-|---------|-----------|--------------------|
-| `/dotnet` | @builder | `dotnet`, `database`, `api-contract`, `security`, `testing`, `commits` |
-| `/astro` | @builder | `astro`, `typescript`, `database`, `security`, `testing`, `commits` |
-| `/nextjs` | @builder | `nextjs`, `typescript`, `database`, `security`, `testing`, `commits` |
-| `/mobile` | @builder | `react-native` (or `flutter`), `typescript`, `commits` |
-| `/devops` | @builder | `devops`, `security`, `commits` |
-| `/design` | @designer | `design-workflow` |
-| `/spec` | @architect | `spec-writing` |
-| `/research` | @architect | `tech-research` |
-| `/review` | @reviewer | `code-review` + stack skill |
-| `/create-image` | @image-gen | `image-generation` |
-| `/plan` | — | `plan-mode` |
-| `/new-feature` | orchestrator loop | `new-feature`, `orchestration`, `plan-mode` |
-| `/bug-fix` | orchestrator loop | `bug-fix`, `orchestration`, `plan-mode` |
-| `/hotfix` | orchestrator loop | `hotfix`, `orchestration` |
-| `/ui-test` | @reviewer | `visual-regression` |
+Skills are invoked three ways — pick whichever is faster:
+- **Slash**: `/skill-name` (e.g. `/intake`, `/astro`, `/new-feature`)
+- **Natural language**: "write a spec for X", "review this PR", "checkout formunu düzelt" — the harness auto-matches by skill description
+- **Agent delegation**: an active agent (orchestrator / @architect / @builder / @reviewer) invokes skills on behalf of the user
 
-> `/frontend` is deprecated — use `/astro` or `/nextjs` instead.
+Stack entry points (`astro`, `nextjs`, `dotnet`, `react-native`, `flutter`, `devops`) activate @builder and auto-load the relevant cross-cutting skills (`typescript`, `database`, `security`, `testing`, `commits`, `api-contract` as applicable).
+
+Workflow entry points (`new-feature`, `bug-fix`, `hotfix`) start the orchestration loop described in the `orchestration` skill.
+
+Discovery / planning (`intake`, `spec-writing`, `plan-mode`, `tech-research`, `edge-cases`) run read-only; no production code edited.
+
+Review / test (`code-review`, `testing`, `visual-regression`) run via @reviewer, read-only.
+
+Client communication (`client-report`, `client-handoff`) run in the main session, no agent.
+
+## End-to-End Freelance Flow
+
+Every non-trivial job flows through these phases. Each phase is a skill (invoke via slash or keyword).
+
+1. **Intake / Discovery** — `intake` + `edge-cases` → `docs/intake/{date}-{slug}.md`
+2. **Spec** (XL only) — `spec-writing` + `edge-cases` → `docs/requirements.md` + `docs/tech-spec.md`
+3. **Plan** — `plan-mode` + `edge-cases`
+4. **Build** — stack skill (`astro` / `nextjs` / `dotnet` / `react-native` / `flutter` / `devops`) + `commits`
+5. **Review** — `code-review` + relevant stack skill
+6. **Test** — `testing` (unit + integration + smoke/E2E) + `visual-regression` for UI
+7. **Ship** — `commits` + `git-workflow` + `deployment`
+8. **Report** — `client-report {daily|delivery|weekly|incident|handoff}`
+
+`new-feature`, `bug-fix`, `hotfix` wrap phases 1–8 as orchestrated loops. See `orchestration` skill for the Intake Gate rules (when intake is mandatory vs skippable).
 
 ## Rules
 

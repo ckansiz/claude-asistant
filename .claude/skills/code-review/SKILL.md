@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: This skill should be used when the user asks to "review this code", "review the PR", "do a QA pass", "check for issues", or invokes /review. Reports findings — never edits files (handed to @reviewer).
+description: This skill should be used when the user asks to "review this code", "review the PR", "do a QA pass", "check for issues", or invokes /code-review. Reports findings — never edits files (handed to @reviewer).
 version: 1.0.0
 ---
 

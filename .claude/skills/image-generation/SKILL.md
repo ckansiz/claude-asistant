@@ -1,6 +1,6 @@
 ---
 name: image-generation
-description: This skill should be used when the user asks to "create a special-day visual", "generate a holiday post", "make a Wesoco client image", "create social media image" (story/feed/banner/OG), or invokes /create-image. Drives DALL-E 3 / FLUX / Stable Image Core via the local Python tool.
+description: This skill should be used when the user asks to "create a special-day visual", "generate a holiday post", "make a Wesoco client image", "create social media image" (story/feed/banner/OG), or invokes /image-generation. Drives DALL-E 3 / FLUX / Stable Image Core via the local Python tool.
 version: 1.0.0
 ---
 
