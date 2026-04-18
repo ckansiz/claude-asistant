@@ -1,43 +1,55 @@
-# Project Memory Index
+# Project Memory
 
-Lightweight index for `.claude/memory/`. Read the file you need; don't preload everything.
+**This folder is project-local.** Everything under `.claude/memory/` (except this README) is gitignored and **never touched by `scripts/sync-eng-team.sh`**. Put project-specific context here; it stays with your project forever.
 
-## Core
+## What goes here
 
-- [profile.md](profile.md) — Cem's identity, stack preferences, delegation preferences
-- [workspace.md](workspace.md) — project roots, path keywords, Wesoco client stacks
+Lightweight, curated context that Claude should read to stay grounded on *your* project. Read the file you need — do not preload everything.
 
-## Clients (`clients/`)
+### Suggested layout
 
-One file per Wesoco client. Contains stack, branding, deploy target, known constraints.
+```
+.claude/memory/
+├── README.md              # This file (the only tracked one)
+├── profile.md             # Developer/team identity, language, delegation preferences
+├── workspace.md           # Project roots, keyword → path map, per-project stack
+├── clients/               # One file per client (stack, branding, deploy, constraints)
+│   ├── _template.md
+│   └── {client-slug}.md
+└── decisions/             # ADRs — why we picked X over Y
+    └── adr-NNN-{slug}.md
+```
 
-- [_template.md](clients/_template.md) — copy when onboarding a new client
-- [arzisi-project.md](clients/arzisi-project.md)
-- [asfire.md](clients/asfire.md)
-- [kanser-tedavi.md](clients/kanser-tedavi.md)
-- [oltan.md](clients/oltan.md)
-- [qretna-app.md](clients/qretna-app.md)
-- [serkan-tayar.md](clients/serkan-tayar.md)
-- [wcard-website.md](clients/wcard-website.md)
+None of this is mandatory — create only what your workflow needs. Recommended starters:
 
-## Decisions (`decisions/`)
+- **`profile.md`** — who you are, preferred language, stack defaults that override `CLAUDE.md`, what you delegate vs do yourself.
+- **`workspace.md`** — paths you type as "qoommerce" / "client-x" / etc., mapped to absolute directories and stacks. Claude uses this to resolve keywords.
+- **`clients/{slug}.md`** — per-client context so Claude doesn't re-ask every time: stack, brand colors, deploy target, known gotchas.
+- **`decisions/adr-NNN-{slug}.md`** — immutable record of a non-obvious technical choice. Supersede with a new ADR instead of rewriting.
 
-Architecture Decision Records — why we picked X over Y. Read before re-litigating a decision.
+## When to update
 
-- [adr-001-no-mediatr.md](decisions/adr-001-no-mediatr.md)
-- [adr-002-openapi-typescript-codegen.md](decisions/adr-002-openapi-typescript-codegen.md)
-- [adr-003-agent-model-assignment.md](decisions/adr-003-agent-model-assignment.md)
-- [adr-004-ui-stack-mandatory.md](decisions/adr-004-ui-stack-mandatory.md)
+| Trigger | File |
+|---------|------|
+| New client onboarded | `clients/{slug}.md` (copy from a template) + add row to `workspace.md` |
+| New architecture decision | `decisions/adr-NNN-{slug}.md` |
+| Change to developer preferences / stack defaults | `profile.md` |
+| New project root, keyword, or alias | `workspace.md` |
 
-## When to Update
+## What NOT to put here
 
-- New client → `clients/{slug}.md` (copy template) + add row to `workspace.md`
-- New architecture decision → `decisions/adr-NNN-{slug}.md`
-- Change in Cem's preferences / stack defaults → `profile.md`
-- Never dump conversation logs or ephemeral task notes here — memory is for durable context
+- Conversation logs or ephemeral task notes — use sprint folders for that
+- Credentials, API keys, secrets — use `.env` (gitignored)
+- Anything derivable from code, git history, or `CLAUDE.md`
+- Content that belongs in a sprint folder (`docs/sprints/{YYYY-MM-DD}-*/`)
 
 ## Conventions
 
-- Paths absolute from `.claude/memory/`
+- Paths in links relative to `.claude/memory/`
 - Filenames lowercase, kebab-case
-- ADRs immutable once accepted; supersede with a new ADR instead of rewriting
+- ADRs immutable once accepted — supersede with a new ADR rather than rewriting
+- Keep each file short. If a file grows beyond ~200 lines, split it.
+
+## Why this folder is not synced
+
+The template (`scripts/sync-eng-team.sh`) updates agents, skills, hooks, and `CLAUDE.md` from upstream. If memory were synced, every update would wipe your project's context. Keeping memory strictly project-local is what makes the sync model safe.
