@@ -1,5 +1,5 @@
 """
-Compositor Smurf - Post-generation image compositing
+Compositor - Post-generation image compositing
 Adds text overlay and Wesoco logo to AI-generated images.
 """
 

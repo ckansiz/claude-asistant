@@ -44,7 +44,7 @@ Never generate without confirming:
 ```bash
 cd tools/image-generator
 source .venv/bin/activate
-python papa_smurf.py
+python generate.py
 ```
 
 APIs:

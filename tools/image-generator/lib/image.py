@@ -36,7 +36,7 @@ def generate_with_dalle(positive_prompt: str, negative_prompt: str, platform: st
     filepath = _download_and_save(image_url, platform, "dalle")
 
     if overlay_text or True:  # logo her zaman eklenir
-        from smurfs.compositor_smurf import finalize_image
+        from lib.compositor import finalize_image
         filepath = finalize_image(filepath, overlay_text, platform)
 
     return filepath
@@ -69,7 +69,7 @@ def generate_with_flux(positive_prompt: str, negative_prompt: str, platform: str
     image_url = str(output)
     filepath = _download_and_save(image_url, platform, "flux")
 
-    from smurfs.compositor_smurf import finalize_image
+    from lib.compositor import finalize_image
     return finalize_image(filepath, overlay_text, platform)
 
 
@@ -108,7 +108,7 @@ def generate_with_stability(positive_prompt: str, negative_prompt: str, platform
     with open(filepath, "wb") as f:
         f.write(response.content)
 
-    from smurfs.compositor_smurf import finalize_image
+    from lib.compositor import finalize_image
     return finalize_image(filepath, overlay_text, platform)
 
 

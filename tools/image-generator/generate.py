@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Smurfette Image Generator - CLI Entry Point
+Image Generator - CLI Entry Point
 """
 
 import sys
@@ -8,13 +8,13 @@ import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 from config import available_apis, FORMATS
-from smurfs.prompt_smurf import generate_prompt
-from smurfs.image_smurf import GENERATORS
+from lib.prompt import generate_prompt
+from lib.image import GENERATORS
 
 
 BANNER = """
 +----------------------------------------------+
-|      Smurfette Image Generator               |
+|      Image Generator                         |
 |      AI-Powered Visual Creation              |
 +----------------------------------------------+
 """

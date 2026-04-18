@@ -14,8 +14,8 @@ if [[ -z "$FILE" ]]; then
   exit 0
 fi
 
-# --- Guard: only run for files in actual project directories, not the smurfs config repo ---
-if [[ "$FILE" == */workspace/smurfs/* ]]; then
+# --- Guard: skip files inside the template repo itself (no drift to check there) ---
+if [[ "$FILE" == */workspace/eng-team/* ]]; then
   exit 0
 fi
 
