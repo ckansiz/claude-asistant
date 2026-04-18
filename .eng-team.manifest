@@ -1,0 +1,48 @@
+# eng-team template manifest
+#
+# Paths listed here are MANAGED by the template and overwritten on every
+# `scripts/sync-eng-team.sh` run. Anything not listed is project-local and
+# never touched by sync.
+#
+# Rules:
+#   - Paths are relative to the repo root.
+#   - Trailing slash means "directory, recursive" (synced with --delete).
+#   - No trailing slash means "single file".
+#   - Lines starting with # and blank lines are ignored.
+#
+# NOT MANAGED (for reference, never add these here):
+#   - README.md                    (downstream projects have their own)
+#   - .gitignore                   (project-specific)
+#   - .claude/memory/              (project-local — see .claude/memory/README.md)
+#   - .claude/settings.local.json  (local overrides)
+#   - docs/sprints/[0-9]*          (active sprint folders)
+#   - projects/                    (downstream project workspace)
+#   - tools/                       (opt-in per project)
+#   - scripts/bootstrap.sh         (template-only, runs once)
+
+# Root-level managed files
+CLAUDE.md
+.eng-team.manifest
+
+# Agent definitions
+.claude/agents/
+
+# Skill definitions
+.claude/skills/
+
+# Safety hooks
+.claude/hooks/
+
+# Helper scripts that ship with the template (e.g. API drift check)
+.claude/scripts/
+
+# Settings (hook registration). Use .claude/settings.local.json for project overrides.
+.claude/settings.json
+
+# Sprint templates + the sprint README
+docs/sprints/_template/
+docs/sprints/_template-hotfix/
+docs/sprints/README.md
+
+# Sync script itself (so `sync --self` can update it)
+scripts/sync-eng-team.sh
