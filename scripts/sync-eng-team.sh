@@ -130,11 +130,8 @@ info "Syncing eng-team template"
 info "  local  : ${LOCAL_SHA:0:10}"
 info "  remote : ${REMOTE_SHA:0:10}"
 info ""
-
-if [[ "$LOCAL_SHA" == "$REMOTE_SHA" && $DRY_RUN -eq 0 ]]; then
-  info "Already at upstream HEAD. Nothing to do."
-  exit 0
-fi
+# Always scan even when SHAs match — the user may have modified a managed
+# file locally, and sync's job is to revert it to upstream content.
 
 # --- read upstream manifest (source of truth for what to sync) --------------
 
@@ -159,25 +156,45 @@ fi
 
 # --- rsync helpers ----------------------------------------------------------
 
-# run_rsync <mode: dry|apply> <src> <dst>
+# preview_changes <src> <dst>
+#   Print a human-readable diff of what would change. Empty output = no changes.
 #
-# --checksum is always on: without it, rsync flags every file whose mtime
-# differs — and the upstream clone has fresh mtimes from `git clone`, so
-# identical content would show as a pending change on every run.
-run_rsync() {
-  local mode="$1"
-  local src="$2"
-  local dst="$3"
-  local flags=(-a --checksum)
-
-  if [[ "$mode" == "dry" ]]; then
-    flags+=(-n --itemize-changes)
-  fi
+# For directories: rsync -ani --checksum, filtered to drop mtime-only rows
+# (lines starting with '.'). Lines starting with '>', '<', 'c', or '*' (e.g.
+# '*deleting') indicate real transfers and are kept.
+#
+# For single files: rsync's itemize output on a single file is unreliable
+# (it always prints '>f....... name' regardless of whether the file differs),
+# so fall back to cmp -s and print our own one-liner.
+preview_changes() {
+  local src="$1"
+  local dst="$2"
 
   if [[ -d "$src" ]]; then
-    rsync "${flags[@]}" --delete "$src/" "$dst/"
+    rsync -ani --checksum --delete "$src/" "$dst/" 2>/dev/null \
+      | grep -vE '^\.' \
+      || true
   else
-    rsync "${flags[@]}" "$src" "$dst"
+    local name
+    name="$(basename "$src")"
+    if [[ ! -f "$dst" ]]; then
+      printf '>f+++++++++ %s\n' "$name"
+    elif ! cmp -s "$src" "$dst"; then
+      printf '>f.cst..... %s\n' "$name"
+    fi
+  fi
+}
+
+# apply_changes <src> <dst>
+#   Actually copy the changes. Used only after the user approves.
+apply_changes() {
+  local src="$1"
+  local dst="$2"
+
+  if [[ -d "$src" ]]; then
+    rsync -a --checksum --delete "$src/" "$dst/"
+  else
+    cp "$src" "$dst"
   fi
 }
 
@@ -197,9 +214,7 @@ for p in "${PATHS[@]}"; do
   fi
 
   mkdir -p "$(dirname "$dst")"
-  output="$(run_rsync dry "$src" "$dst" || true)"
-  # rsync -ni prints lines like '>f.st...... path' or 'cd+++++++++ path'
-  # Strip blank lines.
+  output="$(preview_changes "$src" "$dst")"
   output="$(printf '%s\n' "$output" | sed '/^$/d')"
 
   if [[ -n "$output" ]]; then
@@ -240,7 +255,7 @@ else
     dst="$PROJECT_ROOT/$p"
     [[ -e "$src" ]] || continue
     mkdir -p "$(dirname "$dst")"
-    run_rsync apply "$src" "$dst" >/dev/null
+    apply_changes "$src" "$dst" >/dev/null
     log "sync  $p"
   done
 
