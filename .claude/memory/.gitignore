@@ -1,0 +1,6 @@
+# Project-local memory — everything except README and this file is ignored.
+# This folder is never synced from the eng-team template; it travels with
+# the project. See ./README.md for the convention.
+*
+!.gitignore
+!README.md

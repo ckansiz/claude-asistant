@@ -10,10 +10,6 @@ __pycache__/
 *.pyc
 tools/image-generator/sample
 
-# Project-local memory — populated per-project, never shared via template
-.claude/memory/*
-!.claude/memory/README.md
-
 # Project-local work area — used by downstream projects, not the template itself
 projects/
 
