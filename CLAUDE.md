@@ -64,8 +64,8 @@ Ship & run:
 Client-facing features:
 - `forms`, `payments`, `cms`, `i18n`
 
-Process & orchestration:
-- `orchestration`, `new-feature`, `bug-fix`, `hotfix`, `visual-regression`
+Sprint & orchestration:
+- `sprint`, `retro`, `orchestration`, `new-feature`, `bug-fix`, `hotfix`, `visual-regression`
 
 Freelance practice:
 - `client-handoff`, `client-report`
@@ -89,23 +89,55 @@ Client communication (`client-report`, `client-handoff`) run in the main session
 
 ## End-to-End Freelance Flow
 
-Every non-trivial job flows through these phases. Each phase is a skill (invoke via slash or keyword).
+Every non-trivial job flows through these phases inside a **sprint folder** (`docs/sprints/{YYYY-MM-DD}-{client}-{slug}/`). Each phase is a skill (invoke via slash or keyword).
 
-1. **Intake / Discovery** — `intake` + `edge-cases` → `docs/intake/{date}-{slug}.md`
-2. **Spec** (XL only) — `spec-writing` + `edge-cases` → `docs/requirements.md` + `docs/tech-spec.md`
-3. **Plan** — `plan-mode` + `edge-cases`
-4. **Build** — stack skill (`astro` / `nextjs` / `dotnet` / `react-native` / `flutter` / `devops`) + `commits`
-5. **Review** — `code-review` + relevant stack skill
-6. **Test** — `testing` (unit + integration + smoke/E2E) + `visual-regression` for UI
-7. **Ship** — `commits` + `git-workflow` + `deployment`
+0. **Sprint Init** — `sprint` → folder created from `docs/sprints/_template/`, `00-sprint.md` filled, `04-decisions.md` seeded
+1. **Intake / Discovery** — `intake` + `edge-cases` → `01-intake.md`
+2. **Spec** (XL only) — `spec-writing` + `edge-cases` → `02-spec.md`
+3. **Plan** — `plan-mode` + `edge-cases` → `03-plan.md`
+4. **Build** — stack skill (`astro` / `nextjs` / `dotnet` / `react-native` / `flutter` / `devops`) + `commits` → `05-handoffs/builder-report.md`
+5. **Review** — `code-review` + relevant stack skill → `05-handoffs/review-report.md`
+6. **Test** — `testing` (unit + integration + smoke/E2E) + `visual-regression` for UI → `05-handoffs/test-report.md`
+7. **Ship** — `commits` + `git-workflow` + `deployment` → `06-delivery.md`
 8. **Report** — `client-report {daily|delivery|weekly|incident|handoff}`
+9. **Retro** — `retro` → `07-retro.md` (full, İyi/Kötü/Aksiyon) or `02-mini-retro.md` (hotfix, root cause/why missed/prevention) → aksiyonlar applied → `08-system-updates/SUMMARY.md` links
 
-`new-feature`, `bug-fix`, `hotfix` wrap phases 1–8 as orchestrated loops. See `orchestration` skill for the Intake Gate rules (when intake is mandatory vs skippable).
+`new-feature`, `bug-fix`, `hotfix` wrap phases 0–9 as orchestrated loops. See `orchestration` skill for the Intake Gate rules (when intake is mandatory vs skippable).
+
+## Sprint & Retro
+
+Every delivered job is a **sprint**. Delivery-based (not time-based): a 2-day fix and a 2-week feature are each one sprint. See `docs/sprints/README.md` and `sprint` / `retro` skills.
+
+**Size thresholds:**
+
+| Size | Scope | Sprint folder | Retro |
+|------|-------|---------------|-------|
+| S | <4h, trivial, single file, typo/copy/config | skip | skip |
+| M | 1–3 days, one feature/fix | required | full |
+| L | 3–10 days, multi-component | required | full |
+| XL | >10 days, spec-driven | required | full + mid-sprint check |
+| Hotfix | any duration, prod-critical | required (mini) | **mini (mandatory)** |
+
+**Retro contract**: every M+ retro produces ≤3 concrete aksiyonlar. Each aksiyon has a type (`skill` / `CLAUDE.md` / `memory`) and a target file. Aksiyonlar are applied on `chore/retro-{sprint-slug}-{n}` branches and linked in `08-system-updates/SUMMARY.md`. **Sprint is not closed until every aksiyon is applied or explicitly backlogged.**
+
+**Hotfix mini-retro is non-negotiable**: the entire reason hotfix defers full review is that mini-retro compensates. Skipping it = pure tech debt.
+
+**Decisions log (`04-decisions.md`)**: every key trade-off gets a timestamped line — `[YYYY-MM-DD HH:MM] <agent>: <decision> — <why>`. Undocumented decisions surface as retro findings.
+
+## Team Roles (in sprint context)
+
+| Agent | Sprint role |
+|-------|-------------|
+| @architect | Sprint lifecycle owner. Opens folder (Phase 0), runs close checklist, facilitates retro (Phase 9). Orchestrator — only voice to user. |
+| @builder | Appends implementation trade-offs to `04-decisions.md`. Writes `05-handoffs/builder-report.md`. |
+| @reviewer | Writes `05-handoffs/review-report.md` + `test-report.md`. Maintains cross-sprint "patterns observed" in memory → retro input. |
+| @designer | Appends UX/layout decisions to `04-decisions.md`. Mock links referenced from `03-plan.md`. |
+| Main session | Writes `06-delivery.md` and client-facing parts. Signs off retro aksiyonları. |
 
 ## Rules
 
-### Plan Mode (Mandatory for non-trivial work)
-Before writing code: list affected files, summarize changes, get user approval. No edits, no new files, no destructive commands without approval. See `plan-mode` skill.
+### Plan Mode (Always on in this repo)
+**This repo (`eng-team`) runs in plan mode at all times.** Every task — trivial or not — starts with a plan. No edits, no new files, no destructive commands until the user explicitly approves the plan. Flow: understand request → present plan (affected files, summary of changes, risks) → wait for approval → execute. If the user's message is a question or clarification, answer it directly without a plan; plans are only required before taking action. See `plan-mode` skill.
 
 ### Definition of Done
 After any code change, run **in order**:

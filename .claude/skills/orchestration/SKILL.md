@@ -26,37 +26,62 @@ User request
     ↓
 Orchestrator: Intake Gate — is this trivial or does it need discovery?
     │
-    ├─ Trivial (<2h, single file, obvious) → skip to Plan
+    ├─ Trivial S-size (<4h, single file, obvious) → skip sprint folder, skip to Plan
     │
-    └─ Non-trivial → @architect: Intake (intake + edge-cases skills)
+    └─ Non-trivial → Phase 0: Sprint Init (sprint skill)
+                              ↓
+                     @architect: Intake (intake + edge-cases skills) → fills 01-intake.md
                               ↓
                      Intake Brief → user approval
                               ↓
                      Recommended Next Step chosen:
-                         ├─ XL → spec-writing → @architect writes requirements + tech-spec
-                         ├─ M/L → plan-mode
-                         └─ Hotfix → hotfix skill (intake compressed)
+                         ├─ XL → spec-writing → @architect fills 02-spec.md (requirements + tech-spec)
+                         ├─ M/L → plan-mode → fills 03-plan.md
+                         └─ Hotfix → hotfix skill (mini sprint layout, intake compressed)
     ↓
 @architect (if /spec): feasibility + tech plan  (tech-research / spec-writing skills)
     ↓
-User: approves plan
+User: approves plan (frozen into 03-plan.md — post-approval deltas go to 04-decisions.md)
     ↓
-@builder: implement + Handoff Report
+@builder: implement + Handoff Report → 05-handoffs/builder-report.md
     ↓ (quality check FAIL → back to @builder, max 3 iter)
-@reviewer (or @architect): code review
+@reviewer (or @architect): code review → 05-handoffs/review-report.md
     ↓ (CHANGES_REQUESTED → back to @builder, max 3 iter)
-@reviewer with testing skill: run tests (unit + integration + smoke/E2E as scope demands)
+@reviewer with testing skill: run tests → 05-handoffs/test-report.md
     ↓ (FAIL → back to @builder, max 3 iter)
-Orchestrator: Production Readiness Checklist
+Orchestrator: Production Readiness Checklist → 06-delivery.md
     ↓
 Orchestrator: open PR + Client Report (client-report skill) → deliver to user
+    ↓
+Phase 9: Retro (retro skill) → 07-retro.md (full for M+, mini for hotfix)
+    ↓
+Apply retro actions → 08-system-updates/SUMMARY.md
+    ↓
+Sprint closed
 ```
 
 If any loop hits 3 iterations without passing, stop and report honestly to the user — do not keep spinning.
 
+## Phase 0 — Sprint Init
+
+Before anything else runs, the orchestrator decides: **does this work need a sprint folder?**
+
+| Situation | Sprint folder | Retro |
+|-----------|---------------|-------|
+| S-size: <4h, trivial, single file, typo/copy/config | Skip | Skip |
+| M/L/XL: `new-feature` / non-trivial `bug-fix` | Required (full layout) | Full |
+| Hotfix: production fire | Required (mini layout) | Mini (mandatory post-merge) |
+
+If the sprint folder is required, invoke the `sprint` skill to:
+1. Create `docs/sprints/{YYYY-MM-DD}-{client}-{slug}/` from `_template/`.
+2. Fill `00-sprint.md` (goal, size, client, deliverable, roles).
+3. Seed `04-decisions.md` with a kickoff line.
+
+All subsequent artifacts (intake, spec, plan, handoffs, delivery, retro) live inside this folder. No floating docs.
+
 ## Intake Gate — When to Run Intake
 
-Before delegating anything, the orchestrator decides whether an intake brief is required.
+Once the sprint folder is open (or you've decided to skip it for S-size), decide whether an intake brief is required.
 
 | Signal | Intake required? |
 |--------|------------------|
@@ -69,7 +94,7 @@ Before delegating anything, the orchestrator decides whether an intake brief is 
 | Hotfix | Intake compressed into step 1 of `hotfix` skill — not full brief |
 | Copy tweak, typo, config bump | No |
 
-When in doubt, run intake. Cheap compared to the cost of misunderstood scope.
+When in doubt, run intake. Cheap compared to the cost of misunderstood scope. Intake output → `01-intake.md` inside the sprint folder.
 
 ## Quality Gates — Definition of Done
 
@@ -181,8 +206,10 @@ The orchestrator runs this checklist before opening a PR or declaring work done:
 
 ```
 ## Production Readiness
-- [ ] Intake brief (if applicable) — approved and referenced
+- [ ] Sprint folder opened (M+ / hotfix) — all artifacts filed under it
+- [ ] Intake brief (if applicable) — approved and referenced in 01-intake.md
 - [ ] Edge-case table (from `edge-cases` skill) — every row resolved (handled / tested / documented / out-of-scope)
+- [ ] Decisions log (04-decisions.md) has key trade-offs captured
 - [ ] Builder quality check — all PASS
 - [ ] Code review — APPROVED
 - [ ] Tester verdict — PASS (unit + integration + smoke/E2E as scope demands)
@@ -192,10 +219,27 @@ The orchestrator runs this checklist before opening a PR or declaring work done:
 - [ ] Atomic Conventional Commits
 - [ ] Branch pushed
 - [ ] PR opened with changelog section
+- [ ] Delivery noted in 06-delivery.md (PR URL, commit SHAs)
 - [ ] Client report (if client-facing) drafted via `client-report` skill
 ```
 
 Any unchecked item → surface it explicitly to the user, never hide gaps.
+
+## Phase 9 — Retro
+
+After the PR is open and the client report is delivered, the sprint is **not yet closed**. Phase 9 is mandatory for every M+ and hotfix sprint.
+
+Invoke the `retro` skill:
+1. Re-read `04-decisions.md` and `05-handoffs/`.
+2. @reviewer provides any cross-sprint "patterns observed" notes from reviewer memory.
+3. Write `07-retro.md` (full: İyi / Kötü / Aksiyon, max 3 aksiyon) or `02-mini-retro.md` (hotfix: root cause / why missed / prevention).
+4. For each aksiyon: implement the change (skill edit / CLAUDE.md edit / memory entry / regression test) on a `chore/retro-{sprint-slug}-{n}` branch.
+5. Link every applied aksiyon in `08-system-updates/SUMMARY.md`.
+6. Add the final `[timestamp] architect: sprint closed` line to `04-decisions.md`.
+
+**The sprint stays open until every aksiyon is applied or explicitly backlogged with user approval.** This is the contract — retros without system updates are just writing.
+
+@architect is the retro facilitator; the main session (freelancer voice) signs off the aksiyonlar.
 
 ## Pull Request Conventions
 
@@ -220,6 +264,8 @@ Orchestration overhead should match change scope — do not run a full loop for 
 
 ## Companion Skills
 
+- `sprint` — Phase 0 (folder init) and close checklist; every M+ workflow runs inside a sprint folder
+- `retro` — Phase 9 (retro + system update); produces `07-retro.md` and drives `08-system-updates/`
 - `intake` — runs at the Intake Gate; produces the brief that feeds spec/plan
 - `edge-cases` — systematic non-happy-path sweep, referenced by intake/spec/plan/review/testing
 - `plan-mode` — planning discipline before any delegation

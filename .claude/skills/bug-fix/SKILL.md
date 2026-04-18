@@ -8,7 +8,16 @@ version: 1.0.0
 
 Apply when a bug is reported. Same orchestration loop as `new-feature`, but with extra emphasis on root cause + regression test.
 
+> Sprint folder: M+ bug-fix runs inside a sprint folder. Retro is mandatory at close. See `sprint` skill. Production fires go through `hotfix` instead (mini sprint layout + mini-retro).
+
 ## Steps
+
+### 0. Sprint Init (→ `sprint` skill)
+If the bug investigation is M+ (not a trivial typo), open a sprint folder:
+```bash
+cp -r docs/sprints/_template docs/sprints/{YYYY-MM-DD}-{client}-{slug}
+```
+Fill `00-sprint.md` and seed `04-decisions.md` with a kickoff line describing the reported symptom. All subsequent artifacts live in this folder.
 
 ### 1. Reproduce + Analyze
 Pin down the bug:
@@ -60,7 +69,12 @@ Title: `fix(scope): description`. Body sections:
 - **Changelog** (Turkish for TR clients)
 
 ### 9. Post-merge
-Run smoke tests. If this was a production bug, verify the fix on production specifically.
+Run smoke tests. If this was a production bug, verify the fix on production specifically. Fill `06-delivery.md` in the sprint folder with PR URL, commit SHAs, and deploy status.
+
+### 10. Retro (→ `retro` skill, mandatory for M+)
+Bug fixes are the richest source of retro aksiyonlar — the Kötü column almost always has one "why didn't we catch this earlier?" line. Invoke `retro` and focus on:
+- **Root cause promoted to prevention**: if the bug was a missing test, aksiyonu = "add test pattern to `testing` skill". If it was missed edge case, aksiyonu = "add row to `edge-cases` skill". Make the aksiyon structural, not one-off.
+- Apply aksiyonları, link in `08-system-updates/SUMMARY.md`, close the sprint.
 
 ## When the Fix Is Urgent
 
@@ -68,6 +82,8 @@ If the bug is breaking production *right now*, use `hotfix` skill instead — it
 
 ## Companion Skills
 
+- `sprint` — Phase 0 (folder init) + close checklist
+- `retro` — Phase 10 retro; bug fixes are the richest source of aksiyonlar
 - `orchestration` — loop mechanics, report formats
 - `plan-mode` — plan discipline
 - `testing` — regression test patterns per stack

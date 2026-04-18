@@ -8,7 +8,16 @@ version: 1.0.0
 
 Apply when the user requests a new feature. Follow the orchestration loop end-to-end. Details on roles, handoff reports, and the Production Readiness Checklist live in the `orchestration` skill — load it alongside this one.
 
+> Sprint folder: every M+ new-feature runs inside a sprint folder (`docs/sprints/{YYYY-MM-DD}-{client}-{slug}/`). See `sprint` skill. Retro is mandatory at close (`07-retro.md` + `08-system-updates/`). S-size (<4h, trivial) skips the sprint folder.
+
 ## Steps
+
+### 0. Sprint Init (→ `sprint` skill)
+If the feature is M/L/XL (default assumption for new-feature), open a sprint folder first:
+```bash
+cp -r docs/sprints/_template docs/sprints/{YYYY-MM-DD}-{client}-{slug}
+```
+Fill `00-sprint.md` (goal, size, client, deliverable, roles). Seed `04-decisions.md` with the kickoff line.
 
 ### 1. Analyze
 Read the request. Ask clarifying questions if scope is unclear:
@@ -17,7 +26,9 @@ Read the request. Ask clarifying questions if scope is unclear:
 - What's the success condition?
 - Any constraints (timeline, stack, data)?
 
-For bigger features, hand off to `spec-writing` skill for a formal `docs/requirements.md` + `docs/tech-spec.md`.
+For bigger features (XL), hand off to `spec-writing` skill to fill `02-spec.md` inside the sprint folder.
+
+Intake output → `01-intake.md` inside the sprint folder.
 
 ### 2. Feasibility (→ @architect)
 Delegate to @architect for:
@@ -74,6 +85,15 @@ Share the PR URL with the user.
 After the user confirms merge:
 - Run smoke tests against the deployed preview/production URL
 - Report any regression immediately
+- Fill `06-delivery.md` in the sprint folder (PR URL, commit SHAs, deploy status)
+
+### 10. Retro (→ `retro` skill, mandatory for M+)
+Sprint is not closed until retro is written and aksiyonlar applied:
+1. Run the sprint close checklist (`sprint` skill, Step 3) — every artifact present.
+2. Invoke `retro` skill → produces `07-retro.md` (İyi / Kötü / Aksiyon, max 3 aksiyon).
+3. Apply each aksiyon (skill edit / CLAUDE.md edit / memory entry) on `chore/retro-{sprint-slug}-{n}` branches.
+4. Link every applied aksiyon in `08-system-updates/SUMMARY.md`.
+5. Add `[timestamp] architect: sprint closed` line to `04-decisions.md`.
 
 ## Destructive Operations
 
@@ -88,6 +108,8 @@ If the feature requires schema change, seed data, mass updates, or any operation
 
 ## Companion Skills
 
+- `sprint` — Phase 0 (folder init) + close checklist
+- `retro` — Phase 9 (retro + system updates), mandatory at close
 - `orchestration` — loop mechanics, report formats, Production Readiness
 - `plan-mode` — plan format and discipline
 - Stack skill (`dotnet` / `astro` / `nextjs` / `react-native` / `flutter` / `devops`) — discipline-specific standards
